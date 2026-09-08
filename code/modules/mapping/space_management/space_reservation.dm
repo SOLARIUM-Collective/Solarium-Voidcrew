@@ -393,6 +393,9 @@
 	LAZYADD(SSmapping.turf_reservations, src)
 
 /datum/turf_reservation/Destroy()
-	Release()
+	// Release() yields via CHECK_TICK once the set crosses the yield threshold -
+	// too heavy for qdel()'s should-not-sleep Destroy. Defer it; Release() is
+	// reentrancy-safe (see above) and the registry is still updated synchronously.
+	INVOKE_ASYNC(src, PROC_REF(Release))
 	LAZYREMOVE(SSmapping.turf_reservations, src)
 	return ..()

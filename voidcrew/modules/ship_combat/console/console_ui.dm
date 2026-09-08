@@ -34,6 +34,7 @@
 	if(!ui)
 		ui = new(user, src, "ShipCombatConsole")
 		ui.open()
+	..()
 
 /obj/machinery/computer/camera_advanced/ship_combat/ui_state(mob/user)
 	// Allow UI interaction while in camera mode (attack mode)

@@ -109,7 +109,8 @@
 /// Capture check: fires on every step the carrier takes.
 /obj/item/colosseum_flag/proc/on_carrier_moved(mob/living/carrier)
 	SIGNAL_HANDLER
-	game?.check_capture(src, carrier)
+	if(game)
+		INVOKE_ASYNC(game, /datum/colosseum_game/capture_the_flag/proc/check_capture, src, carrier)
 
 /obj/item/colosseum_flag/red
 	name = "red war banner"

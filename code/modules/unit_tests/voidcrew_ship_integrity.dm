@@ -61,7 +61,7 @@
 	return
 
 /obj/structure/overmap/ship/integrity_dummy/update_icon_state()
-	return
+	return ..()
 
 /// Evaluation is driven by hand here so each step is asserted at a known point.
 /obj/structure/overmap/ship/integrity_dummy/queue_integrity_eval()
@@ -87,7 +87,7 @@
 	return
 
 /obj/structure/overmap/ship/npc/integrity_dummy/update_icon_state()
-	return
+	return ..()
 
 /obj/structure/overmap/ship/npc/integrity_dummy/queue_integrity_eval()
 	return

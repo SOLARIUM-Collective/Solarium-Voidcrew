@@ -348,8 +348,10 @@
 	SIGNAL_HANDLER
 	UnregisterSignal(source, COMSIG_DO_AFTER_BEGAN)
 	interleaved = TRUE
-	// A clientless surgeon closes the normal selection with null, the same result as Cancel.
-	other_operation.next_step(other_surgeon, list())
+	// UNLINT: the nested step deliberately runs synchronously inside the real
+	// do_after's COMSIG_DO_AFTER_BEGAN to exercise the reentrancy corridor -
+	// same signal, same synchronous shape as a client's Cancel arrives in.
+	UNLINT(other_operation.next_step(other_surgeon, list()))
 
 /datum/unit_test/vestige_abductor_parallel_surgery/proc/on_step_finished(mob/living/source, datum/surgery_step/step)
 	SIGNAL_HANDLER

@@ -155,10 +155,13 @@ multiple modular subtrees with behaviors
 	update_able_to_run()
 	setup_able_to_run()
 
-	our_cells = new(interesting_dist, interesting_dist, 1)
-	set_new_cells()
+	// can_idle controllers watch the spatial grid for clients nearby. Controllers
+	// that can never idle (e.g. overmap ships) skip the tracking entirely.
+	if(can_idle)
+		our_cells = new(interesting_dist, interesting_dist, 1)
+		set_new_cells()
 
-	RegisterSignal(pawn, COMSIG_MOVABLE_MOVED, PROC_REF(update_grid))
+		RegisterSignal(pawn, COMSIG_MOVABLE_MOVED, PROC_REF(update_grid))
 
 /datum/ai_controller/proc/update_grid(datum/source, datum/spatial_grid_cell/new_cell)
 	SIGNAL_HANDLER
@@ -303,7 +306,7 @@ multiple modular subtrees with behaviors
 	set_ai_status(AI_STATUS_OFF)
 	UnregisterSignal(pawn, list(COMSIG_MOVABLE_Z_CHANGED, COMSIG_MOB_LOGIN, COMSIG_MOB_LOGOUT, COMSIG_MOB_STATCHANGE, COMSIG_QDELETING))
 	clear_able_to_run()
-	if(ai_movement.moving_controllers[src])
+	if(ai_movement?.moving_controllers[src]) // null movement (overmap ships) has no moving-controller bookkeeping
 		ai_movement.stop_moving_towards(src)
 	var/turf/pawn_turf = get_turf(pawn)
 	if(pawn_turf)

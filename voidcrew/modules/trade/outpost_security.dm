@@ -65,22 +65,22 @@ GLOBAL_DATUM_INIT(outpost_pvp_enforcement, /datum/outpost_pvp_enforcement, new)
 /datum/outpost_pvp_enforcement/proc/on_outpost_pvp_item_attack(mob/living/victim, obj/item/weapon, mob/living/offender, list/modifiers, list/attack_modifiers)
 	SIGNAL_HANDLER
 	if(weapon.force)
-		register_pvp_aggression(victim, offender)
+		INVOKE_ASYNC(src, PROC_REF(register_pvp_aggression), victim, offender)
 
 /datum/outpost_pvp_enforcement/proc/on_outpost_pvp_unarmed_attack(mob/living/victim, mob/living/offender, list/modifiers)
 	SIGNAL_HANDLER
 	if(offender.combat_mode || LAZYACCESS(modifiers, RIGHT_CLICK))
-		register_pvp_aggression(victim, offender)
+		INVOKE_ASYNC(src, PROC_REF(register_pvp_aggression), victim, offender)
 
 /datum/outpost_pvp_enforcement/proc/on_outpost_pvp_npc_attack(mob/living/victim, mob/living/offender)
 	SIGNAL_HANDLER
 	if(offender.melee_damage_upper > 0)
-		register_pvp_aggression(victim, offender)
+		INVOKE_ASYNC(src, PROC_REF(register_pvp_aggression), victim, offender)
 
 /datum/outpost_pvp_enforcement/proc/on_outpost_pvp_projectile(mob/living/victim, obj/projectile/hitting_projectile)
 	SIGNAL_HANDLER
 	if(hitting_projectile.is_hostile_projectile() && isliving(hitting_projectile.firer))
-		register_pvp_aggression(victim, hitting_projectile.firer)
+		INVOKE_ASYNC(src, PROC_REF(register_pvp_aggression), victim, hitting_projectile.firer)
 
 /datum/outpost_pvp_enforcement/proc/on_outpost_pvp_thrown_item(mob/living/victim, atom/movable/hitting_atom, datum/thrownthing/throwingdatum)
 	SIGNAL_HANDLER
@@ -89,15 +89,15 @@ GLOBAL_DATUM_INIT(outpost_pvp_enforcement, /datum/outpost_pvp_enforcement, new)
 	var/obj/item/thrown_item = hitting_atom
 	var/mob/living/offender = throwingdatum?.get_thrower()
 	if(thrown_item.throwforce && istype(offender))
-		register_pvp_aggression(victim, offender)
+		INVOKE_ASYNC(src, PROC_REF(register_pvp_aggression), victim, offender)
 
 /datum/outpost_pvp_enforcement/proc/on_outpost_pvp_hulk_attack(mob/living/victim, mob/living/offender)
 	SIGNAL_HANDLER
-	register_pvp_aggression(victim, offender)
+	INVOKE_ASYNC(src, PROC_REF(register_pvp_aggression), victim, offender)
 
 /datum/outpost_pvp_enforcement/proc/on_outpost_pvp_mech_attack(mob/living/victim, obj/vehicle/sealed/mecha/mecha_attacker, mob/living/pilot)
 	SIGNAL_HANDLER
-	register_pvp_aggression(victim, pilot)
+	INVOKE_ASYNC(src, PROC_REF(register_pvp_aggression), victim, pilot)
 
 /obj/machinery/porta_turret/outpost
 	name = "outpost defense turret"
@@ -389,13 +389,13 @@ GLOBAL_DATUM_INIT(outpost_pvp_enforcement, /datum/outpost_pvp_enforcement, new)
 	SIGNAL_HANDLER
 	if(!weapon.force || weapon.damtype == STAMINA)
 		return
-	register_hit(source, attacker)
+	INVOKE_ASYNC(src, PROC_REF(register_hit), source, attacker)
 
 /datum/element/outpost_property/proc/on_projectile_hit(obj/source, obj/projectile/hit_projectile)
 	SIGNAL_HANDLER
 	if(!hit_projectile.is_hostile_projectile() || hit_projectile.damage_type == STAMINA)
 		return
-	register_hit(source, hit_projectile.firer)
+	INVOKE_ASYNC(src, PROC_REF(register_hit), source, hit_projectile.firer)
 
 /datum/element/outpost_property/proc/on_thrown_hit(obj/source, atom/movable/hit_atom, datum/thrownthing/throwingdatum)
 	SIGNAL_HANDLER
@@ -404,13 +404,13 @@ GLOBAL_DATUM_INIT(outpost_pvp_enforcement, /datum/outpost_pvp_enforcement, new)
 	var/obj/item/hit_item = hit_atom
 	if(!hit_item.throwforce || hit_item.damtype == STAMINA)
 		return
-	register_hit(source, throwingdatum?.get_thrower())
+	INVOKE_ASYNC(src, PROC_REF(register_hit), source, throwingdatum?.get_thrower())
 
 /datum/element/outpost_property/proc/on_hulk_attack(obj/source, mob/attacker)
 	SIGNAL_HANDLER
-	register_hit(source, attacker)
+	INVOKE_ASYNC(src, PROC_REF(register_hit), source, attacker)
 
 /// The mecha is the attacker as far as the signal is concerned; the pilot is who the outpost blames
 /datum/element/outpost_property/proc/on_mech_attack(obj/source, obj/vehicle/sealed/mecha/mecha_attacker, mob/living/pilot)
 	SIGNAL_HANDLER
-	register_hit(source, pilot)
+	INVOKE_ASYNC(src, PROC_REF(register_hit), source, pilot)

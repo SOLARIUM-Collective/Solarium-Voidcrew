@@ -687,7 +687,9 @@
 	SIGNAL_HANDLER
 	if(user != owner)
 		return
-	talk_tuah(pick(hurt_lines))
+	// The taunt bubbles through a chat message whose sizing calls MeasureText
+	// (blocking); run it off the signal, like the emote on_dropped() above.
+	INVOKE_ASYNC(src, PROC_REF(talk_tuah), pick(hurt_lines))
 
 /datum/brain_trauma/special/axedoration/proc/talk_tuah(sent_message = "Hello World.")
 	owner.Hear(null, GLOB.bridge_axe, owner.get_selected_language(), sent_message)

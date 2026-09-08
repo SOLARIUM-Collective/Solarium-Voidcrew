@@ -62,6 +62,7 @@
 	var/datum/player_outpost_management_ui/new_panel = new(outpost, user, src)
 	panels += new_panel
 	new_panel.ui_interact(user)
+	..()
 
 /// Preserve the existing minded, non-dead player eligibility on every claim-owned site.
 /obj/structure/overmap/dynamic/player_outpost/proc/is_management_candidate(mob/living/candidate)

@@ -63,12 +63,12 @@
 	return ..()
 
 /// Override to avoid ai_movement access (we set ai_movement = null for ships)
-/// Replicates parent logic without the ai_movement.moving_controllers check
+/// The parent's own teardown is inherited; the ai_movement bookkeeping is null-safe upstream.
 /datum/ai_controller/npc_ship/UnpossessPawn(destroy)
 	if(isnull(pawn))
-		return
+		return ..()
 
-	// Unregister ship-specific signals
+	// Unregister ship-specific signals before the parent drops the pawn.
 	UnregisterSignal(pawn, list(
 		COMSIG_SHIP_SHIELD_HIT,
 		COMSIG_SHIP_HULL_HIT,
@@ -77,20 +77,8 @@
 		COMSIG_SHIP_WEAPONS_LOCKED,
 	))
 
-	// Replicate parent cleanup (without ai_movement check which would crash)
-	SEND_SIGNAL(src, COMSIG_AI_CONTROLLER_UNPOSSESSED_PAWN)
-	set_ai_status(AI_STATUS_OFF)
-	UnregisterSignal(pawn, list(COMSIG_MOVABLE_Z_CHANGED, COMSIG_QDELETING))
-	clear_able_to_run()
-	// SKIP: ai_movement.moving_controllers check - we don't use ai_movement
-	var/turf/pawn_turf = get_turf(pawn)
-	if(pawn_turf)
-		GLOB.ai_controllers_by_zlevel[pawn_turf.z] -= src
-	remove_from_unplanned_controllers()
-	pawn.ai_controller = null
-	pawn = null
-	if(destroy)
-		qdel(src)
+	// Parent cleanup continues: status, generic signals, cell bookkeeping, pawn teardown.
+	return ..()
 
 /// Override to avoid ai_movement access in parent Destroy
 /datum/ai_controller/npc_ship/Destroy(force)
@@ -124,35 +112,15 @@
 	return AI_STATUS_ON
 
 /**
- * Override to avoid mob-specific signal registrations.
+ * Ships get the parent's possession bookkeeping; the mob-only spatial grid
+ * tracking and sentience signals are skipped because can_idle is FALSE.
+ * The parent's generic COMSIG_QDELETING binding is replaced with the ship
+ * teardown hook the pawn is expected to answer.
  */
 /datum/ai_controller/npc_ship/PossessPawn(atom/new_pawn)
-	if(pawn)
-		UnpossessPawn(FALSE)
+	..()
 
-	if(istype(new_pawn.ai_controller))
-		QDEL_NULL(new_pawn.ai_controller)
-
-	if(TryPossessPawn(new_pawn) & AI_CONTROLLER_INCOMPATIBLE)
-		qdel(src)
-		CRASH("[src] attached to [new_pawn] but these are not compatible!")
-
-	pawn = new_pawn
-	pawn.ai_controller = src
-
-	var/turf/pawn_turf = get_turf(pawn)
-	if(pawn_turf)
-		GLOB.ai_controllers_by_zlevel[pawn_turf.z] += src
-
-	SEND_SIGNAL(src, COMSIG_AI_CONTROLLER_POSSESSED_PAWN)
-
-	reset_ai_status()
-	RegisterSignal(pawn, COMSIG_MOVABLE_Z_CHANGED, PROC_REF(on_changed_z_level))
-	update_able_to_run()
-	setup_able_to_run()
-
-	// Ships don't need the spatial grid cell tracking for player detection
-	// They're always active on the overmap
+	RegisterSignal(pawn, COMSIG_QDELETING, PROC_REF(on_ship_destroyed), TRUE)
 
 /**
  * Override to avoid mob-specific signal unregistrations.

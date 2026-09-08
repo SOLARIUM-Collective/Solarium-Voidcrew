@@ -114,7 +114,10 @@ GLOBAL_LIST_EMPTY(player_outposts)
 			berth.release(force = TRUE)
 	berths = null
 	remove_docks()
-	remove_mapzone()
+	// Slot teardown walks the whole level with worldgen yields - far too heavy
+	// for qdel()'s should-not-sleep Destroy. Docks are gone synchronously, the
+	// zone just stays reserved until the deferred teardown hands it back.
+	INVOKE_ASYNC(src, PROC_REF(remove_mapzone))
 	return ..()
 
 /obj/structure/overmap/dynamic/player_outpost/proc/remove_docks()

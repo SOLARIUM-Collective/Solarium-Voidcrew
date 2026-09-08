@@ -1117,12 +1117,17 @@
 	)
 
 /datum/map_template/shuttle/voidcrew/commissioned/New()
-	// Deliberately does NOT call ..(). The parent chain measures [prefix][port_id]_[suffix].dmm
-	// via preload_size(), and this template has no map on disk. Everything the parent New()
-	// actually does for us is the part_requirements fill below.
-	for(var/part_class in GLOB.ship_part_classes)
-		if(!(part_class in part_requirements))
-			part_requirements[part_class] = 0
+	// The parent chain stamps a [prefix][port_id]_[suffix].dmm mappath and preloads it,
+	// but a hand-built hull has no map file; preload_size() is stubbed below and the
+	// bookkeeping is cleared afterwards. The part_requirements fill is done by
+	// /datum/map_template/shuttle/voidcrew/New() along the chain.
+	..()
+	shuttle_id = null
+	mappath = null
+
+/datum/map_template/shuttle/voidcrew/commissioned/preload_size(path, cache)
+	// There is no map on disk, so there are no bounds to measure.
+	return null
 
 /**
  * Turns a sealed enclosure into a flying vessel.

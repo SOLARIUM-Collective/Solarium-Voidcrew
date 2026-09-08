@@ -234,7 +234,7 @@
 	if(!audience)
 		return
 	COOLDOWN_START(src, idle_line_cooldown, 2 MINUTES)
-	speak_line(TRADER_LINE_IDLE)
+	INVOKE_ASYNC(src, PROC_REF(speak_line), TRADER_LINE_IDLE)
 
 /// The polite "no" noise for refused purchases and sales
 /mob/living/basic/outpost_trader/proc/play_denial()

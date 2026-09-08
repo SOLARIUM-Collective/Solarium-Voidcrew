@@ -469,7 +469,9 @@
 /datum/unit_test/vestige_hunt_channel_reentrant/proc/reenter_during_channel(mob/living/source)
 	SIGNAL_HANDLER
 	UnregisterSignal(source, COMSIG_DO_AFTER_BEGAN)
-	reentrant_result = spell.before_cast(other_ground)
+	// The reentrant before_cast resolves synchronously (the overlap guard precedes any sleep);
+	// the static checker cannot know that, hence the UNLINT.
+	reentrant_result = UNLINT(spell.before_cast(other_ground))
 
 /datum/unit_test/vestige_hunt_channel_reentrant/Run()
 	var/turf/center = get_step(get_step(run_loc_floor_bottom_left, NORTH), EAST)
@@ -981,7 +983,7 @@
 				break
 			weapon.melee_attack_chain(keeper, quarry, list())
 		TEST_ASSERT_EQUAL(quarry.stat, DEAD, "The ordinary weapon must produce the fresh carcass.")
-		TEST_ASSERT(rack.mouse_drop_receive(quarry, keeper, null), "The real drag-drop route must complete both hang and buckle channels.")
+		TEST_ASSERT(UNLINT(rack.mouse_drop_receive(quarry, keeper, null)), "The real drag-drop route must complete both hang and buckle channels.")
 		TEST_ASSERT_EQUAL(quarry.buckled, rack, "The credited carcass must actually hang from the rack.")
 		TEST_ASSERT_EQUAL(trial.settings, setting_number, "Each actual fresh hanging must credit one setting.")
 		carcasses += quarry

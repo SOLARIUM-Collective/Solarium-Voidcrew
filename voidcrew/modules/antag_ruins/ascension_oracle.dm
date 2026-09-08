@@ -398,7 +398,13 @@
 		return
 	handle_disengagement(seconds_per_tick)
 	if(!inert && SPT_PROB(3, seconds_per_tick))
-		say(pick(mutterings), forced = "vestige oracle")
+		INVOKE_ASYNC(src, PROC_REF(mutter_quietly))
+
+/**
+ * The oracle mutters under its breath. Split off so Life can fire it async.
+ */
+/mob/living/basic/vestige_oracle/proc/mutter_quietly()
+	say(pick(mutterings), forced = "vestige oracle")
 
 /**
  * Kite-and-plink killer, straight off the Hoarfrost Matriarch. If it cannot see

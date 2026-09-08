@@ -184,8 +184,11 @@
 
 /datum/action/cooldown/spell/voice_of_the_word/unit_test_prompt/cast(atom/cast_on)
 	// The regression concerns entering the cast chain, not honking at unrelated fixtures.
+	// The dispatcher is entered with a dead cast_on so the living-only effect bails
+	// before shouting at neighbouring tests.
 	cast_calls++
 	last_cast_on = cast_on
+	..(null)
 
 /// A stale input cannot cast twice, refund another cast, or speak through an abandoned body.
 /datum/unit_test/vestige_word_prompt_lifecycle/Run()
@@ -278,6 +281,9 @@
 
 /datum/action/cooldown/spell/mass_hack/unit_test_prompt/cast(atom/cast_on)
 	// Count the real cast dispatch without scheduling explosions across the test room.
+	// The picked hack is never chosen in tests, so the real body bails inside the
+	// dispatcher and nothing in the room blows up.
+	. = ..()
 	cast_calls++
 
 /// A mass-hack radial cannot carry its authorization past sleep, cooldown or body transfer.

@@ -2035,6 +2035,7 @@ GLOBAL_LIST_INIT(ship_rcd_hull_designs, list(
 		ui = new(user, src, "ShipConstructionConsole", name)
 		ui.open()
 		ui.set_autoupdate(TRUE)
+	..()
 
 /obj/machinery/computer/camera_advanced/base_construction/ship/ui_data(mob/user)
 	var/list/data = list()

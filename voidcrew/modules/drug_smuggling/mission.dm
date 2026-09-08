@@ -62,7 +62,11 @@
 		drop_site_waypoint(site)
 		drop_site_gps_signal(site)
 	QDEL_LIST(sites)
-	release_lab()
+	// release_lab() can run a whole worldgen-queued ruin teardown
+	// (check_and_respawn -> release_interior yields), which is too heavy for
+	// qdel()'s should-not-sleep Destroy. The lab stays mission_locked for one
+	// tick, no worse than any other queued teardown.
+	INVOKE_ASYNC(src, PROC_REF(release_lab))
 	// Contract's over either way: the patrol has no quarrel left
 	patrol?.stand_down()
 	patrol = null

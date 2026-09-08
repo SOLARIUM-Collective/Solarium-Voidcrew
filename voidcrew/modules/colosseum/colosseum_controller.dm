@@ -476,7 +476,7 @@
 	SIGNAL_HANDLER
 	var/datum/colosseum_contestant/entry = entry_for_body(source)
 	if(entry)
-		eliminate(entry, COLOSSEUM_ELIM_DEATH)
+		INVOKE_ASYNC(src, PROC_REF(eliminate), entry, COLOSSEUM_ELIM_DEATH)
 
 /datum/colosseum_controller/proc/on_contestant_deleted(mob/living/source)
 	SIGNAL_HANDLER
@@ -484,7 +484,7 @@
 	if(!entry)
 		return
 	untrack_contestant(entry)
-	eliminate(entry, COLOSSEUM_ELIM_DELETED)
+	INVOKE_ASYNC(src, PROC_REF(eliminate), entry, COLOSSEUM_ELIM_DELETED)
 
 /datum/colosseum_controller/proc/on_contestant_logout(mob/living/source)
 	SIGNAL_HANDLER
@@ -527,7 +527,7 @@
 		return
 	var/datum/colosseum_contestant/entry = entry_for_body(source)
 	if(entry)
-		eliminate(entry, COLOSSEUM_ELIM_FLED)
+		INVOKE_ASYNC(src, PROC_REF(eliminate), entry, COLOSSEUM_ELIM_FLED)
 
 /// The announcement predicate for an elimination reason ("X <phrase>!").
 /// The COLOSSEUM_ELIM_* strings themselves stay terse for logs and rosters.

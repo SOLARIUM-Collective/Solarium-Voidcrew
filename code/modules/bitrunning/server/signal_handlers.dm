@@ -19,7 +19,9 @@
 	sever_connections()
 
 	if(generated_domain)
-		scrub_vdom()
+		// The domain scrub releases reservations (Release() yields on the big
+		// ones) and qdels every boss; keep the deletion signal non-blocking.
+		INVOKE_ASYNC(src, PROC_REF(scrub_vdom))
 
 	if(is_ready)
 		return

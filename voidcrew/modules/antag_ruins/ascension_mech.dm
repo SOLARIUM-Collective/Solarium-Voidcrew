@@ -431,7 +431,7 @@
 	if(stat == DEAD)
 		return
 	var/atom/opponent = ai_controller?.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
-	take_a_read(opponent)
+	INVOKE_ASYNC(src, PROC_REF(take_a_read), opponent)
 	handle_disengagement(opponent, seconds_per_tick)
 
 /**

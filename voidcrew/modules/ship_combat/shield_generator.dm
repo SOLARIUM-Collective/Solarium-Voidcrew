@@ -1688,7 +1688,9 @@
 	// If shuttle move isn't done yet, on_shuttle_move_complete will handle it
 	if(pending_wall_respawn && shuttle_move_done)
 
-		try_respawn_walls()
+		// Wall respawn walks the whole hull perimeter with CHECK_TICK; run it off
+		// the signal so a large ship cannot stall the dock sequence.
+		INVOKE_ASYNC(src, PROC_REF(try_respawn_walls))
 
 /// Called when this generator is physically moved by the shuttle system
 /obj/machinery/ship_combat/shield_generator/proc/on_shuttle_move_complete(datum/source, turf/old_turf)
@@ -1717,7 +1719,9 @@
 			return
 		// Docked to planet/ruin/empty alone - respawn walls
 
-		try_respawn_walls()
+		// Wall respawn flips the whole perimeter with CHECK_TICK; defer it so a
+		// large hull cannot stall the shuttle-move completion signal.
+		INVOKE_ASYNC(src, PROC_REF(try_respawn_walls))
 	// No dock means we are on our way OUT: complete_undock_warmup() nulls ship.docked
 	// before SSshuttle ever moves the hull, so an undock ALWAYS lands here with a null
 	// dock and this branch must not treat that as "nothing to do". The respawn happens in
@@ -1773,7 +1777,8 @@
 	// console reporting ACTIVE shields at full health and no walls to intercept anything -
 	// missiles, meteors and lasers all pass straight through to the hull.
 	if(pending_wall_respawn && shuttle_move_done)
-		try_respawn_walls()
+		// Same CHECK_TICK deferral as the dock-side respawn above.
+		INVOKE_ASYNC(src, PROC_REF(try_respawn_walls))
 
 	// Shields still don't auto-ACTIVATE on undock - crew must manually enable
 

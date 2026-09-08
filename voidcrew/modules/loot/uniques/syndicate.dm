@@ -223,7 +223,10 @@
 		to_chat(user, span_warning("\The [src] is still recharging - [DisplayTimeText(COOLDOWN_TIMELEFT(src, snatch_cooldown))] left. You'll have to do this the slow way."))
 		return NONE
 
-	var/success = planting ? try_plant(user, target, relevant_item) : try_snatch(user, target, relevant_item)
+	// UNLINT: this fast path funnels through equip_delay_self_check(), which
+	// short-circuits on our bypass_equip_delay_self = TRUE, so the static
+	// checker's do_after -> stoplag trail can never actually sleep here.
+	var/success = UNLINT(planting ? try_plant(user, target, relevant_item) : try_snatch(user, target, relevant_item))
 	if(!success)
 		return NONE
 
