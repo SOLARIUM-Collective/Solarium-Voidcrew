@@ -1,3 +1,3 @@
 #ifdef ASTRAMILITARUM
-	#include "..\Astramilitarum\_Includes\_onclick.dm"
+	#include "..\Astramilitarum\_Includes\_onClick.dm"
 #endif
