@@ -11,7 +11,7 @@ on:
         default: false
         type: boolean
       window_hours:
-        description: "Зеркалить ПРы, принятые в апстриме за последние N часов (если catchup_all=false)"
+        description: "Зеркалить ПРы, принятые в апстриме за последние N часов (если ВКЛ ВСЕ ПРы апстрима)"
         required: false
         default: "2"
       max_per_run:
