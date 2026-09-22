@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+      - stream_update
 
 concurrency:
   group: ci-${{ github.head_ref || github.run_id }}
