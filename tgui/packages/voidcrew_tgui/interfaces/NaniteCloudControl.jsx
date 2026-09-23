@@ -676,7 +676,7 @@ export const NaniteCloudControl = (props, context) => {
           <Stack.Item grow basis={0}>
             <NaniteProgrammerContent />
           </Stack.Item>
-          <Stack.Item width="375px">
+          <Stack.Item grow basis={0}>
             <Stack vertical fill>
               <Stack.Item>
                 <Section
