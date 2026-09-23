@@ -495,7 +495,7 @@ export const NaniteCloudBackupDetails = (props, context) => {
             }>
             <Section>
               <NaniteInfoBox program={program} />
-              {!!can_rule && (
+              {(!!can_rule || !!program.has_rules) && (
                 <Section
                   mt={-2}
                   title="Rules"
@@ -542,7 +542,7 @@ export const NaniteCloudBackupDetails = (props, context) => {
                             })
                           }
                         />
-                        {rule.display}
+                        {` ${rule.display}`}
                       </Box>
                     ))
                   ) : (
