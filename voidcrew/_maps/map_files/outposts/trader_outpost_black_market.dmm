@@ -10,9 +10,6 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating_new/dark,
-/obj/structure/sign/poster/contraband/free_key/directional/north{
-	pixel_z = 3
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
@@ -57,6 +54,9 @@
 /obj/effect/turf_decal/siding/thinplating_new/dark,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light/red/directional/north,
+/obj/structure/sign/painting/large/library{
+	dir = 1
+	},
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
 "ag" = (
@@ -420,7 +420,7 @@
 	dir = 1
 	},
 /obj/structure/sign/painting/library{
-	pixel_z = -32
+	pixel_y = -32
 	},
 /turf/open/indestructible/dark/smooth_large,
 /area/voidcrew/trader_outpost)
@@ -560,6 +560,9 @@
 /obj/effect/turf_decal/siding/thinplating_new/dark{
 	dir = 4
 	},
+/obj/structure/sign/painting/library{
+	pixel_w = -32
+	},
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
 "bG" = (
@@ -642,6 +645,9 @@
 /obj/effect/turf_decal/siding/wideplating_new/dark{
 	dir = 10
 	},
+/obj/structure/sign/painting/library{
+	pixel_y = -32
+	},
 /turf/open/floor/carpet/neon/simple/red/nodots,
 /area/voidcrew/trader_outpost)
 "cL" = (
@@ -653,6 +659,9 @@
 	},
 /obj/effect/turf_decal/tile/dark_red/half/contrasted{
 	dir = 8
+	},
+/obj/structure/sign/painting/library{
+	pixel_w = -32
 	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
@@ -699,6 +708,9 @@
 	dir = 8
 	},
 /obj/machinery/newscaster/directional/east,
+/obj/structure/sign/poster/contraband/free_key/directional/north{
+	pixel_z = 3
+	},
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
 "dz" = (
@@ -949,14 +961,14 @@
 /obj/effect/turf_decal/siding/thinplating_new/dark{
 	dir = 1
 	},
-/obj/structure/sign/painting/library{
-	pixel_z = -32
-	},
 /obj/item/storage/fancy/cigarettes/cigars{
 	pixel_z = 7
 	},
 /obj/item/storage/box/matches{
 	pixel_z = 6
+	},
+/obj/structure/sign/painting/library{
+	pixel_y = -32
 	},
 /turf/open/indestructible/dark/smooth_large,
 /area/voidcrew/trader_outpost)
@@ -1128,12 +1140,6 @@
 	},
 /obj/machinery/light/red/directional/west,
 /turf/open/indestructible/dark/smooth_large,
-/area/voidcrew/trader_outpost)
-"jt" = (
-/obj/effect/turf_decal/siding/wideplating_new/dark{
-	dir = 1
-	},
-/turf/open/floor/carpet/neon/simple/red/nodots,
 /area/voidcrew/trader_outpost)
 "jx" = (
 /obj/effect/turf_decal/siding/wideplating_new/dark/corner,
@@ -1752,6 +1758,9 @@
 /obj/effect/turf_decal/tile/dark_red/half/contrasted{
 	dir = 4
 	},
+/obj/structure/sign/painting/library{
+	pixel_w = 32
+	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "vK" = (
@@ -2059,7 +2068,7 @@
 /obj/effect/turf_decal/tile/dark_red/half/contrasted,
 /obj/effect/turf_decal/siding/wideplating_new/dark,
 /obj/structure/sign/painting/library{
-	pixel_z = -32
+	pixel_y = -32
 	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
@@ -2183,11 +2192,11 @@
 /turf/open/indestructible/dark/smooth_large,
 /area/voidcrew/trader_outpost)
 "Cj" = (
-/obj/effect/turf_decal/siding/wideplating_new/dark{
-	dir = 1
-	},
 /obj/machinery/newscaster/directional/north,
 /obj/machinery/light/red/directional/north,
+/obj/effect/turf_decal/siding/wideplating_new/dark/corner{
+	dir = 4
+	},
 /turf/open/floor/carpet/neon/simple/red/nodots,
 /area/voidcrew/trader_outpost)
 "Cq" = (
@@ -2226,6 +2235,9 @@
 /obj/machinery/shower/directional/north,
 /obj/effect/turf_decal/trimline/dark_red/filled/line,
 /obj/machinery/light/red/directional/south,
+/obj/structure/sign/painting/library{
+	pixel_y = -32
+	},
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
 "CR" = (
@@ -2678,6 +2690,9 @@
 /obj/effect/turf_decal/trimline/dark_red/filled/mid_joiner{
 	dir = 8
 	},
+/obj/structure/sign/painting/large/library{
+	dir = 4
+	},
 /turf/open/indestructible/dark/smooth_large,
 /area/voidcrew/trader_outpost)
 "Jt" = (
@@ -2970,11 +2985,11 @@
 /turf/open/indestructible/dark/smooth_large,
 /area/voidcrew/trader_outpost)
 "Ov" = (
-/obj/effect/turf_decal/siding/wideplating_new/dark{
-	dir = 1
-	},
 /obj/item/radio/intercom/directional/north,
 /obj/machinery/light/red/directional/north,
+/obj/effect/turf_decal/siding/wideplating_new/dark/corner{
+	dir = 1
+	},
 /turf/open/floor/carpet/neon/simple/red/nodots,
 /area/voidcrew/trader_outpost)
 "Oz" = (
@@ -4231,7 +4246,7 @@ aC
 aC
 aa
 Bm
-jt
+ai
 kM
 BG
 ai
@@ -4265,7 +4280,7 @@ aC
 aC
 aV
 HH
-jt
+ai
 tP
 kU
 kF
@@ -4299,7 +4314,7 @@ aC
 aC
 aV
 Ih
-jt
+ai
 My
 xB
 ai
@@ -4333,7 +4348,7 @@ aC
 aC
 aV
 LK
-jt
+ai
 ai
 Gq
 kF
@@ -4367,7 +4382,7 @@ aC
 aC
 aa
 CE
-jt
+ai
 HN
 kU
 ai

@@ -658,6 +658,9 @@
 /obj/machinery/porta_turret/outpost,
 /obj/effect/turf_decal/box/red,
 /obj/machinery/light/blacklight/directional/north,
+/obj/structure/sign/picture_frame/portrait/bar{
+	pixel_z = 32
+	},
 /turf/open/indestructible/grass,
 /area/voidcrew/trader_outpost)
 "dU" = (
@@ -1356,6 +1359,11 @@
 	},
 /turf/open/indestructible/dark/smooth_large,
 /area/voidcrew/trader_outpost)
+"lR" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/sign/painting/large/library,
+/turf/open/indestructible/plating,
+/area/voidcrew/trader_outpost)
 "lT" = (
 /obj/effect/turf_decal/siding/wideplating_new/dark/corner,
 /obj/effect/turf_decal/tile/neutral,
@@ -1468,6 +1476,9 @@
 /obj/machinery/porta_turret/outpost,
 /obj/effect/turf_decal/box/red/corners,
 /obj/structure/extinguisher_cabinet/directional/north,
+/obj/structure/sign/painting/library{
+	pixel_w = -32
+	},
 /turf/open/indestructible/stone,
 /area/voidcrew/trader_outpost)
 "nb" = (
@@ -1933,6 +1944,9 @@
 	dir = 4
 	},
 /obj/item/kirbyplants/organic/plant22,
+/obj/structure/sign/picture_frame/hall_of_fame/two{
+	pixel_w = 32
+	},
 /turf/open/indestructible,
 /area/voidcrew/trader_outpost)
 "tb" = (
@@ -2219,6 +2233,9 @@
 	},
 /obj/effect/turf_decal/tile/neutral/anticorner/contrasted{
 	dir = 8
+	},
+/obj/structure/sign/painting/library{
+	pixel_y = -32
 	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
@@ -2902,6 +2919,9 @@
 	},
 /obj/machinery/light/floor,
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
+/obj/structure/sign/painting/library{
+	pixel_y = -32
+	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "BL" = (
@@ -3783,6 +3803,9 @@
 /obj/effect/turf_decal/box/red/corners{
 	dir = 8
 	},
+/obj/structure/sign/painting/large/library{
+	dir = 1
+	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "KR" = (
@@ -4021,6 +4044,9 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/cobweb,
+/obj/structure/sign/painting/large/library{
+	dir = 1
+	},
 /turf/open/indestructible/dark/smooth_large,
 /area/voidcrew/trader_outpost)
 "Nw" = (
@@ -4305,6 +4331,9 @@
 	},
 /obj/machinery/light/floor,
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
+/obj/structure/sign/painting/library{
+	pixel_y = -32
+	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "Qd" = (
@@ -4547,6 +4576,9 @@
 /obj/item/kirbyplants/organic/plant22,
 /obj/structure/extinguisher_cabinet/directional/north,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
+/obj/structure/sign/painting/library{
+	pixel_w = 32
+	},
 /turf/open/indestructible/stone,
 /area/voidcrew/trader_outpost)
 "SC" = (
@@ -5003,6 +5035,9 @@
 	dir = 8
 	},
 /obj/item/kirbyplants/organic/plant22,
+/obj/structure/sign/picture_frame/hall_of_fame/four{
+	pixel_w = -32
+	},
 /turf/open/indestructible,
 /area/voidcrew/trader_outpost)
 "WO" = (
@@ -5115,6 +5150,9 @@
 	dir = 1
 	},
 /obj/item/kirbyplants/organic/plant22,
+/obj/structure/sign/picture_frame/hall_of_fame/one{
+	pixel_z = 32
+	},
 /turf/open/indestructible,
 /area/voidcrew/trader_outpost)
 "XN" = (
@@ -5125,6 +5163,9 @@
 /obj/machinery/porta_turret/outpost,
 /obj/effect/turf_decal/box/red/corners{
 	dir = 1
+	},
+/obj/structure/sign/painting/library{
+	pixel_y = -32
 	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
@@ -5281,6 +5322,9 @@
 /obj/effect/turf_decal/siding/wideplating_new,
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
 /obj/item/kirbyplants/organic/plant22,
+/obj/structure/sign/picture_frame/hall_of_fame/three{
+	pixel_z = -32
+	},
 /turf/open/indestructible,
 /area/voidcrew/trader_outpost)
 "Zu" = (
@@ -7584,7 +7628,7 @@ as
 as
 ak
 rX
-JD
+lR
 ak
 ak
 hr

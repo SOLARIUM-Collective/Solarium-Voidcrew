@@ -656,6 +656,9 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light/directional/west,
+/obj/structure/sign/painting/library{
+	pixel_w = -32
+	},
 /turf/open/indestructible,
 /area/voidcrew/trader_outpost)
 "fC" = (
@@ -814,6 +817,9 @@
 	},
 /obj/item/kirbyplants/organic/plant22,
 /obj/effect/decal/cleanable/dirt,
+/obj/structure/sign/painting/library{
+	pixel_y = 32
+	},
 /turf/open/indestructible/large,
 /area/voidcrew/trader_outpost)
 "hR" = (
@@ -902,6 +908,9 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/trimline/yellow/line,
+/obj/structure/sign/painting/library{
+	pixel_w = -32
+	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "jh" = (
@@ -927,6 +936,9 @@
 /turf/open/indestructible/large,
 /area/voidcrew/trader_outpost)
 "js" = (
+/obj/structure/sign/painting/library{
+	pixel_w = -32
+	},
 /turf/open/indestructible{
 	base_icon_state = "stairs-l";
 	icon_state = "stairs-l";
@@ -1552,6 +1564,9 @@
 	},
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /obj/structure/extinguisher_cabinet/directional/north,
+/obj/structure/sign/painting/library{
+	pixel_w = 32
+	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "si" = (
@@ -2180,6 +2195,15 @@
 /obj/machinery/light/small/directional/north,
 /turf/open/indestructible/hoteltile,
 /area/voidcrew/trader_outpost)
+"zS" = (
+/obj/structure/sign/painting/large/library{
+	dir = 8
+	},
+/turf/open/indestructible{
+	base_icon_state = "stairs-l";
+	icon_state = "stairs-l"
+	},
+/area/voidcrew/trader_outpost)
 "Ah" = (
 /obj/effect/turf_decal/trimline/yellow/corner{
 	dir = 8
@@ -2365,6 +2389,9 @@
 	},
 /obj/effect/turf_decal/tile/yellow/anticorner/contrasted,
 /obj/item/radio/intercom/directional/south,
+/obj/structure/sign/painting/library{
+	pixel_w = 32
+	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "CQ" = (
@@ -2398,6 +2425,9 @@
 	},
 /obj/effect/turf_decal/trimline/yellow/filled/line,
 /obj/effect/turf_decal/trimline/yellow/filled/mid_joiner,
+/obj/structure/sign/painting/library{
+	pixel_w = -32
+	},
 /turf/open/indestructible/large,
 /area/voidcrew/trader_outpost)
 "Dp" = (
@@ -2891,6 +2921,15 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
+"Kt" = (
+/obj/structure/sign/painting/large/library{
+	dir = 4
+	},
+/turf/open/indestructible{
+	base_icon_state = "stairs-r";
+	icon_state = "stairs-r"
+	},
+/area/voidcrew/trader_outpost)
 "Ku" = (
 /obj/structure/chair/comfy/black{
 	dir = 4
@@ -3382,6 +3421,9 @@
 	dir = 8
 	},
 /obj/machinery/light/directional/west,
+/obj/structure/sign/painting/library{
+	pixel_w = -32
+	},
 /turf/open/indestructible/large,
 /area/voidcrew/trader_outpost)
 "Tg" = (
@@ -3556,6 +3598,9 @@
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/siding/thinplating_new{
 	dir = 1
+	},
+/obj/structure/sign/painting/library{
+	pixel_y = 32
 	},
 /turf/open/indestructible/large,
 /area/voidcrew/trader_outpost)
@@ -4279,7 +4324,7 @@ lF
 tU
 al
 al
-al
+zS
 al
 eo
 XZ
@@ -5151,7 +5196,7 @@ hE
 gQ
 Vl
 Vl
-Vl
+Kt
 Vl
 fs
 Ei
