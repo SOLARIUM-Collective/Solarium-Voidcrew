@@ -7138,8 +7138,6 @@
 #include "voidcrew\modules\nanites\code\machines\nanite_chamber.dm"
 #include "voidcrew\modules\nanites\code\machines\nanite_chamber_control.dm"
 #include "voidcrew\modules\nanites\code\machines\nanite_cloud_control.dm"
-#include "voidcrew\modules\nanites\code\machines\nanite_program_hub.dm"
-#include "voidcrew\modules\nanites\code\machines\nanite_programmer.dm"
 #include "voidcrew\modules\nanites\code\machines\public_chamber.dm"
 #include "voidcrew\modules\nanites\code\programs\_programs.dm"
 #include "voidcrew\modules\nanites\code\programs\buffing.dm"
