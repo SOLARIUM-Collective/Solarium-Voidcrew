@@ -362,7 +362,7 @@
 	var/list/all_access = list()
 	var/obj/locked_object = locked_thing
 	for(var/datum/nanite_program/access/access_program in programs)
-		if(access_program.activated)
+		if(access_program.activated && !access_program.force_disabled)
 			all_access += access_program.access
 
 	if(locked_object.check_access_list(all_access))
