@@ -317,6 +317,7 @@
 /obj/effect/turf_decal/tile/yellow/half/contrasted{
 	dir = 1
 	},
+/obj/machinery/newscaster/directional/north,
 /turf/open/indestructible,
 /area/voidcrew/trader_outpost)
 "aY" = (
@@ -516,6 +517,7 @@
 	},
 /obj/item/radio/intercom/directional/south,
 /obj/effect/decal/cleanable/dirt,
+/obj/machinery/newscaster/directional/east,
 /turf/open/indestructible/white/smooth_large,
 /area/voidcrew/trader_outpost)
 "dU" = (
@@ -727,7 +729,6 @@
 /area/voidcrew/trader_outpost)
 "gq" = (
 /obj/structure/rack,
-/obj/item/gun/ballistic/shotgun/doublebarrel,
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 4
 	},
@@ -736,6 +737,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light/small/red/directional/west,
+/obj/item/gun/energy/laser/redtag,
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
 "gD" = (
@@ -1093,9 +1095,6 @@
 /area/voidcrew/trader_outpost)
 "lw" = (
 /obj/structure/rack,
-/obj/item/gun/energy/laser{
-	pixel_y = 3
-	},
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 4
 	},
@@ -1103,6 +1102,7 @@
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/item/gun/energy/laser/bluetag,
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
 "lx" = (
@@ -1357,6 +1357,7 @@
 /obj/effect/turf_decal/tile/yellow/half/contrasted{
 	dir = 4
 	},
+/obj/machinery/newscaster/directional/east,
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "pC" = (
@@ -1589,6 +1590,7 @@
 /area/voidcrew/trader_outpost)
 "ss" = (
 /obj/machinery/light/directional/south,
+/obj/machinery/newscaster/directional/south,
 /turf/open/indestructible/hoteltile,
 /area/voidcrew/trader_outpost)
 "st" = (
@@ -2001,6 +2003,18 @@
 	},
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
+"xt" = (
+/obj/structure/closet/secure_closet/outpost_rental,
+/obj/effect/turf_decal/siding/wideplating_new/dark{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/yellow/half/contrasted{
+	dir = 4
+	},
+/obj/machinery/light/directional/east,
+/obj/machinery/newscaster/directional/east,
+/turf/open/indestructible/dark,
+/area/voidcrew/trader_outpost)
 "xw" = (
 /obj/structure/table/reinforced,
 /obj/machinery/cell_charger,
@@ -2018,6 +2032,7 @@
 	},
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/item/hand_item/circlegame,
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
 "xC" = (
@@ -2618,6 +2633,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible/dark/textured,
 /area/voidcrew/trader_outpost)
+"GI" = (
+/obj/effect/turf_decal/siding/thinplating_new{
+	dir = 4
+	},
+/obj/machinery/newscaster/directional/east,
+/turf/open/indestructible/large,
+/area/voidcrew/trader_outpost)
 "Hd" = (
 /obj/effect/turf_decal/siding/wideplating_new/dark,
 /turf/open/indestructible/dark,
@@ -2670,6 +2692,7 @@
 	dir = 1
 	},
 /obj/machinery/light/directional/west,
+/obj/machinery/newscaster/directional/west,
 /turf/open/indestructible/large,
 /area/voidcrew/trader_outpost)
 "HL" = (
@@ -2771,6 +2794,7 @@
 	dir = 1
 	},
 /obj/machinery/light/directional/north,
+/obj/machinery/newscaster/directional/north,
 /turf/open/indestructible,
 /area/voidcrew/trader_outpost)
 "JG" = (
@@ -2904,6 +2928,7 @@
 	pixel_w = 9;
 	pixel_z = 10
 	},
+/obj/machinery/newscaster/directional/west,
 /turf/open/indestructible/dark,
 /area/voidcrew/trader_outpost)
 "KA" = (
@@ -4823,7 +4848,7 @@ aV
 dU
 OP
 ea
-ea
+GI
 ea
 jA
 dU
@@ -5424,7 +5449,7 @@ ao
 dU
 dU
 sf
-rl
+xt
 tW
 wd
 rl
