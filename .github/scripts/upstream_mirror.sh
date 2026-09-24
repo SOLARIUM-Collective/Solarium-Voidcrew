@@ -10,11 +10,16 @@ BASE_BRANCH="${BASE_BRANCH:-stream_update}"
 CATCHUP_ALL="${CATCHUP_ALL:-false}"
 WINDOW_HOURS="${WINDOW_HOURS:-2}"
 MAX_PER_RUN="${MAX_PER_RUN:-220}"
+MIRROR_LABEL="${UPSTREAM_MIRROR_LABEL:-}"
 REMOTE_BASE="origin/${BASE_BRANCH}"
 
 TOKEN="${UPSTREAM_MIRROR_PAT:-${GITHUB_TOKEN:-}}"
 [ -n "$TOKEN" ] || die "нет токена (UPSTREAM_MIRROR_PAT или GITHUB_TOKEN)"
 export GH_TOKEN="$TOKEN"
+
+if [ -n "$MIRROR_LABEL" ]; then
+  gh label create "$MIRROR_LABEL" --force --color "5319E7" >/dev/null 2>&1 || true
+fi
 
 case "$WINDOW_HOURS" in ''|*[!0-9]*) WINDOW_HOURS=2 ;; esac
 case "$MAX_PER_RUN" in ''|*[!0-9]*) MAX_PER_RUN=220 ;; esac
@@ -138,8 +143,10 @@ while IFS=$'\t' read -r n merged_at msha; do
 - Порядковый номер присвоен по порядку принятия в апстриме.
 
 ПР содержит только слияние коммитов апстрим-ПРа. Модуляризация и финальная интеграция выполняются отдельно (как в существующих коммитах \`Modularize PR #N\`)."
-    if gh pr create --repo "$MIRROR_REPO" --base "$BASE_BRANCH" --head "$branch" \
-        --title "Upstream #${n} (mirror №${ordinal})" --body "$body" >/dev/null; then
+    local pr_args=( --repo "$MIRROR_REPO" --base "$BASE_BRANCH" --head "$branch" \
+        --title "Upstream #${n} (mirror №${ordinal})" --body "$body" )
+    [ -n "$MIRROR_LABEL" ] && pr_args+=( --label "$MIRROR_LABEL" )
+    if gh pr create "${pr_args[@]}" >/dev/null; then
       log "готово: upstream #${n} -> mirror №${ordinal} (${branch})"
       mark_done "$n"
     else

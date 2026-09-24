@@ -22,6 +22,10 @@ on:
         description: "Ветка, в которую открываются зеркальные ПРы"
         required: false
         default: "stream_update"
+      mirror_label:
+        description: "Label на зеркальные ПРы (оставь пустым, чтобы не вешать)"
+        required: false
+        default: "🧲 Зеркало"
 
 permissions:
   contents: write
@@ -38,6 +42,7 @@ env:
   WINDOW_HOURS: ${{ inputs.window_hours || '2' }}
   MAX_PER_RUN: ${{ inputs.max_per_run || '220' }}
   UPSTREAM_MIRROR_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM }}
+  UPSTREAM_MIRROR_LABEL: ${{ inputs.mirror_label }}
 
 jobs:
   mirror:
