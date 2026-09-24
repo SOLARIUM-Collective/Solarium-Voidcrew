@@ -421,8 +421,8 @@ SUBSYSTEM_DEF(planet_mobs)
 
 /**
  * Whether a mob may be despawned. Anything a player is attached to, anything dead
- * (bodies are evidence and loot), anything inside something else, megafauna and
- * contract mobs are all off limits.
+ * (bodies are evidence and loot), anything inside something else, anything aboard
+ * a ship or in an outpost, megafauna and contract mobs are all off limits.
  *
  * `allow_dead` is for the grace-period sweep only, which runs on a zone nobody has been
  * on for three minutes: there is no one left for a body to be evidence for, and nothing
@@ -445,10 +445,22 @@ SUBSYSTEM_DEF(planet_mobs)
 		return FALSE
 	if(!isturf(candidate.loc))
 		return FALSE
+	// Docked ships share the planet's footprint. Their animals and stored bodies
+	// must survive even when every player disconnects or leaves the surface.
+	var/area/candidate_area = get_area(candidate)
+	if(istype(candidate_area, /area/shuttle) \
+		|| istype(candidate_area, /area/voidcrew/trader_outpost) \
+		|| istype(candidate_area, /area/voidcrew/outpost_hangar) \
+		|| istype(candidate_area, /area/voidcrew/player_outpost))
+		return FALSE
 	if(istype(candidate, /mob/living/simple_animal/hostile/megafauna))
 		return FALSE
 	if(HAS_TRAIT(candidate, TRAIT_MISSION_FIELD_MOB))
 		return FALSE
+	// Deleting a carrier also deletes its contents, including player corpses in Legions.
+	for(var/mob/contained as anything in candidate.get_all_contents_type(/mob))
+		if(contained.ckey || contained.mind)
+			return FALSE
 	return TRUE
 
 /// Counts the managed (despawnable) mobs currently alive on a planet.
