@@ -49,6 +49,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM || github.token }}
       - name: Mirror accepted upstream PRs
         shell: bash
         run: bash .github/scripts/upstream_mirror.sh
