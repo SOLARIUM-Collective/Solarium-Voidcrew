@@ -37,7 +37,7 @@ env:
   CATCHUP_ALL: ${{ inputs.catchup_all || 'false' }}
   WINDOW_HOURS: ${{ inputs.window_hours || '2' }}
   MAX_PER_RUN: ${{ inputs.max_per_run || '10' }}
-  UPSTREAM_MIRROR_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT }}
+  UPSTREAM_MIRROR_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM }}
 
 jobs:
   mirror:
