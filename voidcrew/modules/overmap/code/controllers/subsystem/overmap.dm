@@ -163,7 +163,7 @@ SUBSYSTEM_DEF(overmap)
 /**
  * Once-a-minute derelict bookkeeping over the whole fleet. Occupancy is the only
  * signal, and has_active_crew() is what it means: a living, connected player aboard,
- * or one of the hull's own roster alive, connected and on the hull's z-level - the
+ * or one of the hull's own roster alive, connected and visiting its docked site - the
  * landing party standing on the planet their ship is parked on. Three clocks run off
  * it, the first independent of the other two:
  *
@@ -178,8 +178,8 @@ SUBSYSTEM_DEF(overmap)
  * 1. A hull with no active crew for SHIP_CREWLESS_ABANDON_TIME is abandoned - the
  *    claimable-derelict state. This is the trigger crew death alone never provided:
  *    a crew that logs off, cryos out or walks away is an abandoned ship too. Being
- *    outdoors is not walking away, though - an away team on the hull's own z-level
- *    holds it (has_active_crew()), and the carve-outs that stay refused are the ones
+ *    outdoors is not walking away, though - an away team at the docked site, including
+ *    its elevator-connected floors, holds it (has_active_crew()). The exclusions are the ones
  *    that matter: dead, ghosted, cryoed and logged-off crew count for nothing.
  *    Getting the ship back afterwards is one claim at the helm. A hull that never
  *    carried a crew at all (roundstart spares, latejoin free hulls nobody took) skips
@@ -199,6 +199,11 @@ SUBSYSTEM_DEF(overmap)
  * says nothing about them and their own crew-death tracking drives abandonment. Once
  * abandoned, claimed by players, or destroyed they are subject to the same rules as any
  * hull, which is what finally stops every killed pirate leaving a permanent wreck.
+ *
+ * A hull docked at a player outpost is exempt from all three clocks, unconditionally -
+ * it is parked at somebody's home rather than sitting abandoned in the field, and
+ * nothing about it should tick towards a claim window or a despawn. This is the one
+ * site type that pauses the clocks without requiring anyone to actually be present.
  */
 /datum/controller/subsystem/overmap/proc/sweep_derelicts()
 	var/despawned_one = FALSE
@@ -209,6 +214,15 @@ SUBSYSTEM_DEF(overmap)
 		if(QDELETED(ship))
 			continue
 		if(ship.has_active_crew())
+			ship.crewless_since = 0
+			ship.site_dead_since = 0
+			ship.site_dead_undock_refused = FALSE
+			continue
+		// A hull docked at a player outpost is parked at someone's home, not drifting
+		// derelict in the field - none of the three clocks above should run against it
+		// at all, occupied or not. Unlike every other site type, presence doesn't even
+		// enter into it here.
+		if(istype(ship.docked, /obj/structure/overmap/dynamic/player_outpost))
 			ship.crewless_since = 0
 			ship.site_dead_since = 0
 			ship.site_dead_undock_refused = FALSE
