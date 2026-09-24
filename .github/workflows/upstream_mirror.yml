@@ -17,7 +17,7 @@ on:
       max_per_run:
         description: "Максимум ПРов за один запуск"
         required: false
-        default: "10"
+        default: "220"
       base_branch:
         description: "Ветка, в которую открываются зеркальные ПРы"
         required: false
@@ -36,7 +36,7 @@ env:
   BASE_BRANCH: ${{ inputs.base_branch || 'stream_update' }}
   CATCHUP_ALL: ${{ inputs.catchup_all || 'false' }}
   WINDOW_HOURS: ${{ inputs.window_hours || '2' }}
-  MAX_PER_RUN: ${{ inputs.max_per_run || '10' }}
+  MAX_PER_RUN: ${{ inputs.max_per_run || '220' }}
   UPSTREAM_MIRROR_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM }}
 
 jobs:

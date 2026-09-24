@@ -9,7 +9,7 @@ MIRROR_REPO="${GITHUB_REPOSITORY:-SOLARIUM-Collective/Solarium-Voidcrew}"
 BASE_BRANCH="${BASE_BRANCH:-stream_update}"
 CATCHUP_ALL="${CATCHUP_ALL:-false}"
 WINDOW_HOURS="${WINDOW_HOURS:-2}"
-MAX_PER_RUN="${MAX_PER_RUN:-10}"
+MAX_PER_RUN="${MAX_PER_RUN:-220}"
 REMOTE_BASE="origin/${BASE_BRANCH}"
 
 TOKEN="${UPSTREAM_MIRROR_PAT:-${GITHUB_TOKEN:-}}"
@@ -17,8 +17,8 @@ TOKEN="${UPSTREAM_MIRROR_PAT:-${GITHUB_TOKEN:-}}"
 export GH_TOKEN="$TOKEN"
 
 case "$WINDOW_HOURS" in ''|*[!0-9]*) WINDOW_HOURS=2 ;; esac
-case "$MAX_PER_RUN" in ''|*[!0-9]*) MAX_PER_RUN=10 ;; esac
-[ "$MAX_PER_RUN" -ge 1 ] 2>/dev/null || MAX_PER_RUN=10
+case "$MAX_PER_RUN" in ''|*[!0-9]*) MAX_PER_RUN=220 ;; esac
+[ "$MAX_PER_RUN" -ge 1 ] 2>/dev/null || MAX_PER_RUN=220
 
 git config --global user.name  "github-actions[bot]"
 git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
