@@ -54,3 +54,43 @@ jobs:
           git tag "snapshot/$(date -u +%F)" refs/remotes/origin/master 2>/dev/null || true
           git push "$URL" '+refs/tags/*:refs/tags/*' || exit 1
           git count-objects -v | grep -E '^(count|size-pack):'
+
+  backup_submodules:
+    name: "Mirror submodule ${{ matrix.src }}"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - src: "SOLARIUM-Collective/Astramilitarum"
+            backup: "SOLARIUM-Collective/solarexterminatorius-astramilitarum"
+          - src: "SOLARIUM-Collective/Horusheresy"
+            backup: "SOLARIUM-Collective/solarexterminatorius-horusheresy"
+    steps:
+      - name: Mirror submodule
+        shell: bash
+        env:
+          SRC_REPO: ${{ matrix.src }}
+          SUB_BACKUP_REPO: ${{ matrix.backup }}
+        run: |
+          set -uo pipefail
+          [ -n "$BACKUP_SSH_KEY" ] || exit 1
+          git config --global http.version HTTP/1.1
+          git config --global http.postBuffer 524288000
+          SRC_URL="https://github.com/${SRC_REPO}.git"
+          URL="git@github.com:${SUB_BACKUP_REPO}.git"
+          mkdir -p ~/.ssh /tmp/subsrc
+          chmod 700 ~/.ssh
+          printf '%s\n' "$BACKUP_SSH_KEY" > ~/.ssh/backup_key
+          chmod 600 ~/.ssh/backup_key
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/backup_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          cd /tmp/subsrc
+          git init -q
+          git remote add src "$SRC_URL" 2>/dev/null || true
+          git fetch --prune src '+refs/heads/*:refs/remotes/src/*' '+refs/tags/*:refs/tags/*' || exit 1
+          git push --prune "$URL" '+refs/remotes/src/*:refs/heads/*' || exit 1
+          head_sha="$(git ls-remote "$SRC_URL" HEAD | awk '{print $1}')"
+          git tag "snapshot/$(date -u +%F)" "$head_sha" 2>/dev/null || true
+          git push "$URL" '+refs/tags/*:refs/tags/*' || exit 1
+          git count-objects -v | grep -E '^(count|size-pack):'
