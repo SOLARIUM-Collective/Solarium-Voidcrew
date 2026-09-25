@@ -11,6 +11,7 @@ permissions:
 env:
   BACKUP_REPO: "SOLARIUM-Collective/solarexterminatorius"
   BACKUP_SSH_KEY: ${{ secrets.BACKUP_SSH_KEY }}
+  SNAPSHOT_KEEP_DAYS: "14"
 
 jobs:
   backup:
@@ -33,6 +34,17 @@ jobs:
           printf '%s\n' "$BACKUP_SSH_KEY" > ~/.ssh/backup_key
           chmod 600 ~/.ssh/backup_key
           export GIT_SSH_COMMAND="ssh -i ~/.ssh/backup_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-          git push --prune "git@github.com:${BACKUP_REPO}.git" \
-              '+refs/remotes/origin/*:refs/heads/*' '+refs/tags/*:refs/tags/*'
+          URL="git@github.com:${BACKUP_REPO}.git"
+          git push --prune "$URL" '+refs/remotes/origin/*:refs/heads/*' || exit 1
+          git tag "snapshot/$(date -u +%F)" refs/remotes/origin/master 2>/dev/null || true
+          git push "$URL" '+refs/tags/*:refs/tags/*' || exit 1
+          kept_secs="$((SNAPSHOT_KEEP_DAYS * 86400))"
+          now_epoch="$(date -u +%s)"
+          for r in $(git ls-remote "$URL" 'refs/tags/snapshot/*' | awk '{print $2}'); do
+            d="${r#refs/tags/snapshot/}"
+            if [ "$(date -u -d "$d" +%s 2>/dev/null)" -lt "$((now_epoch - kept_secs))" ]; then
+              echo "снимок $d старше ${SNAPSHOT_KEEP_DAYS} дней, удаляю"
+              git push "$URL" --delete "$r" >/dev/null 2>&1
+            fi
+          done
           git count-objects -v | grep -E '^(count|size-pack):'
