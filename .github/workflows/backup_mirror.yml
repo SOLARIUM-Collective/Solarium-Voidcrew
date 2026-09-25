@@ -16,7 +16,7 @@ jobs:
   backup:
     name: Mirror all refs to backup
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 180
     steps:
       - name: Checkout all history
         uses: actions/checkout@v6
