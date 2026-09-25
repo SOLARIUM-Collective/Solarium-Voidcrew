@@ -16,7 +16,7 @@ jobs:
   backup:
     name: Mirror all refs to backup
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 90
     steps:
       - name: Mirror all branches and tags
         shell: bash
@@ -29,5 +29,9 @@ jobs:
           BK="/tmp/solarium-backup.git"
           git clone --mirror "https://github.com/${SRC_REPO}.git" "$BK" || exit 1
           git -C "$BK" config http.https://github.com/.extraheader "AUTHORIZATION: basic ${AUTH}"
+          git -C "$BK" config http.version HTTP/1.1
+          git -C "$BK" config http.postBuffer 524288000
+          git -C "$BK" config http.lowSpeedLimit 1000
+          git -C "$BK" config http.lowSpeedTime 60
           git -C "$BK" push --prune --mirror "https://github.com/${BACKUP_REPO}.git"
           git -C "$BK" count-objects -v | grep -E '^(count|size-pack):'
