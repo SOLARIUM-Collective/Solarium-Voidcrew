@@ -65,14 +65,17 @@ jobs:
         include:
           - src: "SOLARIUM-Collective/Astramilitarum"
             backup: "SOLARIUM-Collective/solarexterminatorius-astramilitarum"
+            ssh_secret: "BACKUP_SSH_KEY_ASTRAMILITARUM"
           - src: "SOLARIUM-Collective/Horusheresy"
             backup: "SOLARIUM-Collective/solarexterminatorius-horusheresy"
+            ssh_secret: "BACKUP_SSH_KEY_HORUSHERESY"
     steps:
       - name: Mirror submodule
         shell: bash
         env:
           SRC_REPO: ${{ matrix.src }}
           SUB_BACKUP_REPO: ${{ matrix.backup }}
+          BACKUP_SSH_KEY: ${{ secrets[matrix.ssh_secret] }}
         run: |
           set -uo pipefail
           [ -n "$BACKUP_SSH_KEY" ] || exit 1
