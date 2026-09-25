@@ -10,7 +10,7 @@ permissions:
 
 env:
   BACKUP_REPO: "SOLARIUM-Collective/solarexterminatorius"
-  BACKUP_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM }}
+  BACKUP_SSH_KEY: ${{ secrets.BACKUP_SSH_KEY }}
 
 jobs:
   backup:
@@ -26,22 +26,13 @@ jobs:
         shell: bash
         run: |
           set -uo pipefail
-          [ -n "$BACKUP_PAT" ] || exit 1
-          git config --global http.version HTTP/1.1
-          git config --global http.postBuffer 524288000
-          git config --global http.lowSpeedLimit 1000
-          git config --global http.lowSpeedTime 60
-          git config --local --unset-all http.https://github.com/.extraheader 2>/dev/null || true
-          PUSH_URL="https://x-access-token:${BACKUP_PAT}@github.com/${BACKUP_REPO}.git"
-          attempt=0
-          until git push --prune "$PUSH_URL" \
-              '+refs/remotes/origin/*:refs/heads/*' '+refs/tags/*:refs/tags/*'; do
-            attempt=$((attempt + 1))
-            if [ "$attempt" -ge 3 ]; then
-              echo "push упёрся в ошибку три раза подряд" >&2
-              exit 1
-            fi
-            echo "push не удался (попытка ${attempt}/3), сплю 30с и повторяю..."
-            sleep 30
-          done
+          [ -n "$BACKUP_SSH_KEY" ] || exit 1
+          git fetch --prune origin '+refs/heads/*:refs/remotes/origin/*' '+refs/tags/*:refs/tags/*' || exit 1
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$BACKUP_SSH_KEY" > ~/.ssh/backup_key
+          chmod 600 ~/.ssh/backup_key
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/backup_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          git push --prune "git@github.com:${BACKUP_REPO}.git" \
+              '+refs/remotes/origin/*:refs/heads/*' '+refs/tags/*:refs/tags/*'
           git count-objects -v | grep -E '^(count|size-pack):'
