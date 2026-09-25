@@ -18,30 +18,30 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      - name: Mirror all branches and tags
+      - name: Checkout all history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Fetch remaining branches and tags
         shell: bash
-        env:
-          SRC_REPO: "SOLARIUM-Collective/Solarium-Voidcrew"
         run: |
           set -uo pipefail
-          [ -n "$BACKUP_PAT" ] || exit 1
+          git fetch --prune origin '+refs/heads/*:refs/remotes/origin/*' '+refs/tags/*:refs/tags/*' || exit 1
           AUTH="$(printf 'x-access-token:%s' "$BACKUP_PAT" | base64 -w0)"
           git config --global http.version HTTP/1.1
           git config --global http.postBuffer 524288000
           git config --global http.lowSpeedLimit 1000
           git config --global http.lowSpeedTime 60
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic ${AUTH}"
-          BK="/tmp/solarium-backup.git"
           attempt=0
-          until git clone --mirror "https://github.com/${SRC_REPO}.git" "$BK"; do
+          until git push --prune "https://github.com/${BACKUP_REPO}.git" \
+              '+refs/remotes/origin/*:refs/heads/*' '+refs/tags/*:refs/tags/*'; do
             attempt=$((attempt + 1))
             if [ "$attempt" -ge 3 ]; then
-              echo "clone упёрся в 500 три раза подряд" >&2
+              echo "push упёрся в ошибку три раза подряд" >&2
               exit 1
             fi
-            echo "клонирование не удалось (попытка ${attempt}/3), сплю 30с и повторяю..."
-            rm -rf "$BK"
+            echo "push не удался (попытка ${attempt}/3), сплю 30с и повторяю..."
             sleep 30
           done
-          git -C "$BK" push --prune --mirror "https://github.com/${BACKUP_REPO}.git"
-          git -C "$BK" count-objects -v | grep -E '^(count|size-pack):'
+          git count-objects -v | grep -E '^(count|size-pack):'
