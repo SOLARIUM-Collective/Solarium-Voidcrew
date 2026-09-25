@@ -1,0 +1,9 @@
+[submodule "Astramilitarum"]
+	path = Astramilitarum
+	url = https://github.com/SOLARIUM-Collective/Astramilitarum.git
+	branch = terra
+
+[submodule "Horusheresy"]
+	path = Horusheresy
+	url = https://github.com/SOLARIUM-Collective/Horusheresy.git
+	branch = horus
