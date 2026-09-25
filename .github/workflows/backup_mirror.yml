@@ -25,13 +25,23 @@ jobs:
         run: |
           set -uo pipefail
           [ -n "$BACKUP_PAT" ] || exit 1
-          AUTH="$(printf 'x-access-token:%s' "$BACKUP_PAT" | base64 -w0)"
+          git config --global http.version HTTP/1.1
+          git config --global http.postBuffer 524288000
+          git config --global http.lowSpeedLimit 1000
+          git config --global http.lowSpeedTime 60
           BK="/tmp/solarium-backup.git"
-          git clone --mirror "https://github.com/${SRC_REPO}.git" "$BK" || exit 1
+          attempt=0
+          until git clone --mirror "https://github.com/${SRC_REPO}.git" "$BK"; do
+            attempt=$((attempt + 1))
+            if [ "$attempt" -ge 3 ]; then
+              echo "clone упёрся в 500 три раза подряд" >&2
+              exit 1
+            fi
+            echo "клонирование не удалось (попытка ${attempt}/3), сплю 30с и повторяю..."
+            rm -rf "$BK"
+            sleep 30
+          done
+          AUTH="$(printf 'x-access-token:%s' "$BACKUP_PAT" | base64 -w0)"
           git -C "$BK" config http.https://github.com/.extraheader "AUTHORIZATION: basic ${AUTH}"
-          git -C "$BK" config http.version HTTP/1.1
-          git -C "$BK" config http.postBuffer 524288000
-          git -C "$BK" config http.lowSpeedLimit 1000
-          git -C "$BK" config http.lowSpeedTime 60
           git -C "$BK" push --prune --mirror "https://github.com/${BACKUP_REPO}.git"
           git -C "$BK" count-objects -v | grep -E '^(count|size-pack):'
