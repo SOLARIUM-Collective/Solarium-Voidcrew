@@ -2,7 +2,7 @@ name: Mirror Upstream PRs
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 */2 * * *"
   workflow_dispatch:
     inputs:
       catchup_all:
@@ -17,7 +17,7 @@ on:
       max_per_run:
         description: "Максимум ПРов за один запуск"
         required: false
-        default: "220"
+        default: "50"
       base_branch:
         description: "Ветка, в которую открываются зеркальные ПРы"
         required: false
@@ -40,7 +40,7 @@ env:
   BASE_BRANCH: ${{ inputs.base_branch || 'stream_update' }}
   CATCHUP_ALL: ${{ inputs.catchup_all || (github.event_name == 'schedule' && 'true') || 'false' }}
   WINDOW_HOURS: ${{ inputs.window_hours || '2' }}
-  MAX_PER_RUN: ${{ inputs.max_per_run || '220' }}
+  MAX_PER_RUN: ${{ inputs.max_per_run || '50' }}
   UPSTREAM_MIRROR_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM }}
   UPSTREAM_MIRROR_LABEL: ${{ inputs.mirror_label }}
 
