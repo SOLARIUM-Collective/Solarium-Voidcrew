@@ -25,10 +25,12 @@ jobs:
         run: |
           set -uo pipefail
           [ -n "$BACKUP_PAT" ] || exit 1
+          AUTH="$(printf 'x-access-token:%s' "$BACKUP_PAT" | base64 -w0)"
           git config --global http.version HTTP/1.1
           git config --global http.postBuffer 524288000
           git config --global http.lowSpeedLimit 1000
           git config --global http.lowSpeedTime 60
+          git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic ${AUTH}"
           BK="/tmp/solarium-backup.git"
           attempt=0
           until git clone --mirror "https://github.com/${SRC_REPO}.git" "$BK"; do
@@ -41,7 +43,5 @@ jobs:
             rm -rf "$BK"
             sleep 30
           done
-          AUTH="$(printf 'x-access-token:%s' "$BACKUP_PAT" | base64 -w0)"
-          git -C "$BK" config http.https://github.com/.extraheader "AUTHORIZATION: basic ${AUTH}"
           git -C "$BK" push --prune --mirror "https://github.com/${BACKUP_REPO}.git"
           git -C "$BK" count-objects -v | grep -E '^(count|size-pack):'
