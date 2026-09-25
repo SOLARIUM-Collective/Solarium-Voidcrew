@@ -38,7 +38,7 @@ concurrency:
 
 env:
   BASE_BRANCH: ${{ inputs.base_branch || 'stream_update' }}
-  CATCHUP_ALL: ${{ inputs.catchup_all || 'false' }}
+  CATCHUP_ALL: ${{ inputs.catchup_all || (github.event_name == 'schedule' && 'true') || 'false' }}
   WINDOW_HOURS: ${{ inputs.window_hours || '2' }}
   MAX_PER_RUN: ${{ inputs.max_per_run || '220' }}
   UPSTREAM_MIRROR_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM }}
