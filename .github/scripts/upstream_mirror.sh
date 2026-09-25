@@ -53,6 +53,11 @@ pr_tsv="$(gh pr list --repo "${MIRROR_REPO}" --state all --limit 2000 --json num
 )"
 pr_tsv="${pr_tsv:-}"
 
+issue_tsv="$(gh issue list --repo "${MIRROR_REPO}" --state all --limit 1000 --json number,title \
+  | jq -r '.[] | [.number,.title] | @tsv'
+)"
+issue_tsv="${issue_tsv:-}"
+
 max_m="$(printf '%s\n' "$pr_tsv" | grep -oP '\(mirror №\K[0-9]+' | sort -n | tail -n1)"
 max_m="${max_m:-0}"
 log "текущий максимальный mirror номер: ${max_m}"
@@ -69,6 +74,12 @@ is_mirrored() {
 }
 
 create_conflict_issue() {
+  local inum ititle
+  [ -z "$issue_tsv" ] || {
+    while IFS=$'\t' read -r inum ititle; do
+      case "$ititle" in "Конфликт при зеркалировании upstream #${1}") log "#${1}: issue о конфликте уже существует, повторно не создаю"; return 0 ;; esac
+    done <<< "$issue_tsv"
+  }
   gh issue create --repo "$MIRROR_REPO" \
       --title "Конфликт при зеркалировании upstream #$1" \
       --body "Автоматическое слияние принятого ПРа апстрима [voidcrew/Voidcrew#$1]($3) (mirror №$4) упёрлось в конфликт. Нужно разобраться вручную." \
