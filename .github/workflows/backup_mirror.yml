@@ -1,0 +1,33 @@
+name: Backup Mirror
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  BACKUP_REPO: "SOLARIUM-Collective/solarexterminatorius"
+  BACKUP_PAT: ${{ secrets.UPSTREAM_MIRROR_PAT || secrets.UPSTREAM_MIRROR_SOLARIUM }}
+
+jobs:
+  backup:
+    name: Mirror all refs to backup
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Mirror all branches and tags
+        shell: bash
+        env:
+          SRC_REPO: "SOLARIUM-Collective/Solarium-Voidcrew"
+        run: |
+          set -uo pipefail
+          [ -n "$BACKUP_PAT" ] || exit 1
+          AUTH="$(printf 'x-access-token:%s' "$BACKUP_PAT" | base64 -w0)"
+          BK="/tmp/solarium-backup.git"
+          git clone --mirror "https://github.com/${SRC_REPO}.git" "$BK" || exit 1
+          git -C "$BK" config http.https://github.com/.extraheader "AUTHORIZATION: basic ${AUTH}"
+          git -C "$BK" push --prune --mirror "https://github.com/${BACKUP_REPO}.git"
+          git -C "$BK" count-objects -v | grep -E '^(count|size-pack):'
