@@ -42,11 +42,11 @@ jobs:
               seeded=$((seeded + 1))
               if [ $((seeded % 500)) -eq 0 ]; then
                 echo "seed: ${seeded} коммитов..."
-                git push "$URL" "${sha}:refs/backup-seed/pending" || exit 1
+                git push --force "$URL" "${sha}:refs/backup-seed/pending" || exit 1
               fi
             done < <(git rev-list --topo-order --reverse refs/remotes/origin/master)
             last="$(git rev-list -n1 refs/remotes/origin/master)"
-            git push "$URL" "${last}:refs/backup-seed/pending" || exit 1
+            git push --force "$URL" "${last}:refs/backup-seed/pending" || exit 1
             echo "сев завершён, повторяю зеркальный пуш"
             git push --prune "$URL" '+refs/remotes/origin/*:refs/heads/*' || exit 1
             git push "$URL" --delete refs/backup-seed/pending >/dev/null 2>&1 || true
