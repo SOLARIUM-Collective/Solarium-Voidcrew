@@ -66,9 +66,11 @@ jobs:
           - src: "SOLARIUM-Collective/Astramilitarum"
             backup: "SOLARIUM-Collective/solarexterminatorius-astramilitarum"
             ssh_secret: "BACKUP_SSH_KEY_ASTRAMILITARUM"
+            read_secret: "READ_SSH_KEY_ASTRAMILITARUM"
           - src: "SOLARIUM-Collective/Horusheresy"
             backup: "SOLARIUM-Collective/solarexterminatorius-horusheresy"
             ssh_secret: "BACKUP_SSH_KEY_HORUSHERESY"
+            read_secret: "READ_SSH_KEY_HORUSHERESY"
     steps:
       - name: Mirror submodule
         shell: bash
@@ -76,24 +78,26 @@ jobs:
           SRC_REPO: ${{ matrix.src }}
           SUB_BACKUP_REPO: ${{ matrix.backup }}
           BACKUP_SSH_KEY: ${{ secrets[matrix.ssh_secret] }}
+          READ_SSH_KEY: ${{ secrets[matrix.read_secret] }}
         run: |
           set -uo pipefail
           [ -n "$BACKUP_SSH_KEY" ] || exit 1
-          git config --global http.version HTTP/1.1
-          git config --global http.postBuffer 524288000
-          SRC_URL="https://github.com/${SRC_REPO}.git"
-          URL="git@github.com:${SUB_BACKUP_REPO}.git"
+          [ -n "$READ_SSH_KEY" ] || exit 1
+          SRC_SSH="git@github.com:${SRC_REPO}.git"
+          WRITE_URL="git@github.com:${SUB_BACKUP_REPO}.git"
           mkdir -p ~/.ssh /tmp/subsrc
           chmod 700 ~/.ssh
-          printf '%s\n' "$BACKUP_SSH_KEY" > ~/.ssh/backup_key
-          chmod 600 ~/.ssh/backup_key
-          export GIT_SSH_COMMAND="ssh -i ~/.ssh/backup_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          printf '%s\n' "$READ_SSH_KEY" > ~/.ssh/read_key
+          chmod 600 ~/.ssh/read_key
+          printf '%s\n' "$BACKUP_SSH_KEY" > ~/.ssh/write_key
+          chmod 600 ~/.ssh/write_key
+          READ_SSH_CMD="ssh -i ~/.ssh/read_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          WRITE_SSH_CMD="ssh -i ~/.ssh/write_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
           cd /tmp/subsrc
           git init -q
-          git remote add src "$SRC_URL" 2>/dev/null || true
-          git fetch --prune src '+refs/heads/*:refs/remotes/src/*' '+refs/tags/*:refs/tags/*' || exit 1
-          git push --prune "$URL" '+refs/remotes/src/*:refs/heads/*' || exit 1
-          head_sha="$(git ls-remote "$SRC_URL" HEAD | awk '{print $1}')"
+          GIT_SSH_COMMAND="$READ_SSH_CMD" git fetch --prune "$SRC_SSH" '+refs/heads/*:refs/remotes/src/*' '+refs/tags/*:refs/tags/*' || exit 1
+          GIT_SSH_COMMAND="$WRITE_SSH_CMD" git push --prune "$WRITE_URL" '+refs/remotes/src/*:refs/heads/*' || exit 1
+          head_sha="$(GIT_SSH_COMMAND="$READ_SSH_CMD" git ls-remote "$SRC_SSH" HEAD | awk '{print $1}')"
           git tag "snapshot/$(date -u +%F)" "$head_sha" 2>/dev/null || true
-          git push "$URL" '+refs/tags/*:refs/tags/*' || exit 1
+          GIT_SSH_COMMAND="$WRITE_SSH_CMD" git push "$WRITE_URL" '+refs/tags/*:refs/tags/*' || exit 1
           git count-objects -v | grep -E '^(count|size-pack):'
