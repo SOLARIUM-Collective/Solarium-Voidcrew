@@ -16,6 +16,7 @@ import type { Box } from 'tgui-core/components';
 import { UI_DISABLED, UI_INTERACTIVE } from 'tgui-core/constants';
 import { type BooleanLike, classes } from 'tgui-core/react';
 import { decodeHtmlEntities } from 'tgui-core/string';
+import { WindowGeometry } from 'solarium_tgui/components/WindowGeometry';
 
 import { backendSuspendStart, globalStore, useBackend } from '../backend';
 import { useDebug } from '../debug';
@@ -56,6 +57,7 @@ export const Window = (props: Props) => {
   const { config, suspended } = useBackend();
   const { debugLayout = false } = useDebug();
   const [isReadyToRender, setIsReadyToRender] = useState(false);
+  const [geometryReady, setGeometryReady] = useState(false);
 
   // We need to set the window to be invisible before we can set its geometry
   // Otherwise, we get a flicker effect when the window is first rendered
@@ -72,8 +74,10 @@ export const Window = (props: Props) => {
   // backend hides it on suspension even if React batches away that render.
   // Restore geometry and visibility for each new UI identity as well as resumes.
   useEffect(() => {
+    setGeometryReady(false);
     if (!suspended && isReadyToRender) {
-      const updateGeometry = () => {
+      let cancelled = false;
+      const updateGeometry = async () => {
         const options = {
           ...config.window,
           size: DEFAULT_SIZE,
@@ -85,7 +89,9 @@ export const Window = (props: Props) => {
         if (config.window?.key) {
           setWindowKey(config.window.key);
         }
-        recallWindowGeometry(options);
+        await recallWindowGeometry(options);
+        if (cancelled) return;
+        setGeometryReady(true);
         Byond.winset(Byond.windowId, {
           'is-visible': true,
         });
@@ -99,6 +105,7 @@ export const Window = (props: Props) => {
       updateGeometry();
 
       return () => {
+        cancelled = true;
         logger.log('unmounting');
       };
     }
@@ -130,7 +137,9 @@ export const Window = (props: Props) => {
         {buttons}
       </TitleBar>
       <div className={classes(['Window__rest', debugLayout && 'debug-layout'])}>
-        {!suspended && children}
+        <WindowGeometry.Provider value={geometryReady}>
+          {children}
+        </WindowGeometry.Provider>
         {!!showDimmer && <div className="Window__dimmer" />}
       </div>
       {!!fancy && (

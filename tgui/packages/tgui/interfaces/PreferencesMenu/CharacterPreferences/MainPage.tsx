@@ -34,7 +34,6 @@ import { DeleteCharacterPopup } from './DeleteCharacterPopup';
 import { MultiNameInput, NameInput } from './names';
 
 const CLOTHING_CELL_SIZE = 48;
-const CLOTHING_SIDEBAR_ROWS = 9;
 
 const CLOTHING_SELECTION_CELL_SIZE = 48;
 const CLOTHING_SELECTION_WIDTH = 5.4;
@@ -351,25 +350,20 @@ function sortPreferences(array: [string, unknown][]) {
 type PreferenceListProps = {
   preferences: Record<string, unknown>;
   randomizations: Record<string, RandomSetting>;
-  maxHeight: string;
+  maxHeight?: string;
+  title?: string;
   children?: ReactNode;
 };
 
 export function PreferenceList(props: PreferenceListProps) {
   const { act } = useBackend<PreferencesMenuData>();
-  const { preferences, randomizations, maxHeight, children } = props;
+  const { preferences, randomizations, maxHeight, title, children } = props;
 
   return (
-    <Stack.Item
-      basis="50%"
-      grow
-      style={{
-        background: 'rgba(0, 0, 0, 0.5)',
-        padding: '4px',
-      }}
-      overflowX="hidden"
-      overflowY="auto"
+    <Section
+      title={title}
       maxHeight={maxHeight}
+      className="CharacterSetup__preferences"
     >
       <LabeledList>
         {sortPreferences(Object.entries(preferences)).map(
@@ -420,7 +414,7 @@ export function PreferenceList(props: PreferenceListProps) {
       </LabeledList>
 
       {children}
-    </Stack.Item>
+    </Section>
   );
 }
 
@@ -428,12 +422,11 @@ export function getRandomization(
   preferences: Record<string, unknown>,
   serverData: ServerData | undefined,
   randomBodyEnabled: boolean,
+  randomizations: Record<string, RandomSetting>,
 ): Record<string, RandomSetting> {
   if (!serverData) {
     return {};
   }
-
-  const { data } = useBackend<PreferencesMenuData>();
 
   if (!randomBodyEnabled) {
     return {};
@@ -444,10 +437,7 @@ export function getRandomization(
       filter(Object.keys(preferences), (key) =>
         serverData.random.randomizable.includes(key),
       ),
-      (key) => [
-        key,
-        data.character_preferences.randomization[key] || RandomSetting.Disabled,
-      ],
+      (key) => [key, randomizations[key] || RandomSetting.Disabled],
     ),
   );
 }
@@ -484,6 +474,7 @@ export function MainPage(props: MainPageProps) {
     Object.fromEntries(mainFeatures),
     serverData,
     randomBodyEnabled,
+    data.character_preferences.randomization,
   );
 
   const nonContextualPreferences = {
@@ -525,8 +516,8 @@ export function MainPage(props: MainPageProps) {
         />
       )}
 
-      <Stack height={`${CLOTHING_SIDEBAR_ROWS * CLOTHING_CELL_SIZE}px`}>
-        <Stack.Item>
+      <div className="CharacterSetup__main">
+        <div className="CharacterSetup__portrait">
           <Stack vertical fill>
             <Stack.Item>
               <CharacterControls
@@ -550,6 +541,8 @@ export function MainPage(props: MainPageProps) {
 
             <Stack.Item grow>
               <CharacterPreview
+                visible={!multiNameInputOpen && !deleteCharacterPopupOpen}
+                width="100%"
                 height="100%"
                 id={data.character_preview_view}
               />
@@ -565,64 +558,72 @@ export function MainPage(props: MainPageProps) {
               />
             </Stack.Item>
           </Stack>
-        </Stack.Item>
+        </div>
 
-        <Stack.Item>
-          <Stack fill vertical wrap>
-            {mainFeatures.map(([clothingKey, clothing]) => {
-              const catalog = serverData?.[
-                clothingKey
-              ] as FeatureChoicedServerData & {
-                name: string;
-              };
+        <div className="CharacterSetup__editor">
+          <Section title="Hair, clothing & features">
+            <Stack wrap>
+              {mainFeatures.map(([clothingKey, clothing]) => {
+                const catalog = serverData?.[
+                  clothingKey
+                ] as FeatureChoicedServerData & {
+                  name: string;
+                };
 
-              return (
-                <Stack.Item key={clothingKey}>
-                  {!catalog ? (
-                    // Skeleton button
-                    <Button height={4} width={4} disabled />
-                  ) : (
-                    <MainFeature
-                      catalog={catalog}
-                      currentValue={clothing}
-                      handleSelect={createSetPreference(act, clothingKey)}
-                      randomization={randomizationOfMainFeatures[clothingKey]}
-                      setRandomization={createSetRandomization(
-                        act,
-                        clothingKey,
-                      )}
-                    />
-                  )}
-                </Stack.Item>
-              );
-            })}
-          </Stack>
-        </Stack.Item>
+                return (
+                  <Stack.Item
+                    key={clothingKey}
+                    className="CharacterSetup__feature"
+                  >
+                    {!catalog ? (
+                      // Skeleton button
+                      <Button height={4} width={4} disabled />
+                    ) : (
+                      <MainFeature
+                        catalog={catalog}
+                        currentValue={clothing}
+                        handleSelect={createSetPreference(act, clothingKey)}
+                        randomization={randomizationOfMainFeatures[clothingKey]}
+                        setRandomization={createSetRandomization(
+                          act,
+                          clothingKey,
+                        )}
+                      />
+                    )}
+                    <Box className="CharacterSetup__featureLabel">
+                      {catalog?.name}
+                    </Box>
+                  </Stack.Item>
+                );
+              })}
+            </Stack>
+          </Section>
 
-        <Stack.Item grow basis={0}>
-          <Stack vertical fill>
+          <div className="CharacterSetup__settings">
             <PreferenceList
+              title="Appearance"
               randomizations={getRandomization(
                 contextualPreferences,
                 serverData,
                 randomBodyEnabled,
+                data.character_preferences.randomization,
               )}
               preferences={contextualPreferences}
-              maxHeight="auto"
             />
 
             <PreferenceList
+              title="Identity & voice"
               randomizations={getRandomization(
                 nonContextualPreferences,
                 serverData,
                 randomBodyEnabled,
+                data.character_preferences.randomization,
               )}
               preferences={nonContextualPreferences}
-              maxHeight="auto"
             />
-          </Stack>
-        </Stack.Item>
-      </Stack>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

@@ -1,13 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
-import { act, type PropsWithChildren } from 'react';
+import { act, type PropsWithChildren, useContext } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { WindowGeometry } from 'solarium_tgui/components/WindowGeometry';
 
 const backend = {
   config: { window: { key: 'sector-prompt', scale: 1, fancy: false } },
   suspended: false,
 };
 const winset = mock(() => {});
-const recallGeometry = mock(() => {});
+const recallGeometry = mock<() => void | Promise<void>>(() => {});
 const setWindowKey = mock(() => {});
 
 Object.assign(globalThis, {
@@ -37,7 +38,7 @@ let root: Root;
 let container: HTMLDivElement;
 
 async function renderPrompt() {
-  await act(() => {
+  await act(async () => {
     root.render(<Window width={325} height={327} title="Create Outpost" />);
   });
 }
@@ -91,4 +92,41 @@ describe('pooled window reuse', () => {
     expect(winset).not.toHaveBeenCalled();
     expect(recallGeometry).not.toHaveBeenCalled();
   });
+});
+
+function GeometryProbe() {
+  const ready = useContext(WindowGeometry);
+  return <div data-geometry-ready={String(ready)} />;
+}
+
+it('keeps native previews disabled until geometry is restored on reopen', async () => {
+  let finish: () => void = () => {};
+  recallGeometry.mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  backend.config.window.key = 'character-reopened';
+  await act(async () => {
+    root.render(
+      <Window>
+        <GeometryProbe />
+      </Window>,
+    );
+  });
+  expect(
+    container
+      .querySelector('[data-geometry-ready]')
+      ?.getAttribute('data-geometry-ready'),
+  ).toBe('false');
+  expect(winset).not.toHaveBeenCalledWith('tgui-window-2', {
+    'is-visible': true,
+  });
+  await act(() => finish());
+  expect(
+    container
+      .querySelector('[data-geometry-ready]')
+      ?.getAttribute('data-geometry-ready'),
+  ).toBe('true');
 });

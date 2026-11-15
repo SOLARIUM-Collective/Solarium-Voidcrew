@@ -14,6 +14,7 @@
 import { perf } from 'common/perf';
 import { createAction } from 'common/redux';
 import type { BooleanLike } from 'tgui-core/react';
+import { HIDE_NATIVE_PREVIEWS } from 'solarium_tgui/components/WindowGeometry';
 
 import { setupDrag } from './drag';
 import { focusMap } from './focus';
@@ -194,6 +195,10 @@ export const backendMiddleware = (store) => {
     if (type === 'ping') {
       Byond.sendMessage('ping/reply');
       return;
+    }
+
+    if (type === 'backend/suspendStart' || type === 'backend/suspendSuccess') {
+      window.dispatchEvent(new Event(HIDE_NATIVE_PREVIEWS));
     }
 
     if (type === 'backend/suspendStart' && !suspendInterval) {

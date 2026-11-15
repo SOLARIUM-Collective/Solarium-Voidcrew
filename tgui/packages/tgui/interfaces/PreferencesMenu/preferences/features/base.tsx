@@ -13,10 +13,10 @@ import {
   Dropdown,
   Input,
   NumberInput,
-  Slider,
   Stack,
 } from 'tgui-core/components';
 import type { BooleanLike } from 'tgui-core/react';
+import { PreferenceSlider } from 'solarium_tgui/components/PreferenceSlider';
 
 import { createSetPreference, type PreferencesMenuData } from '../../types';
 import { useServerPrefs } from '../../useServerPrefs';
@@ -192,16 +192,14 @@ export function FeatureSliderInput(
   const { serverData, handleSetValue, value } = props;
 
   return (
-    <Slider
-      onChange={(e, value) => {
-        handleSetValue(value);
-      }}
+    <PreferenceSlider
+      onCommit={handleSetValue}
+      label={props.featureId}
       disabled={!serverData}
-      minValue={serverData?.minimum || 0}
-      maxValue={serverData?.maximum || 100}
+      min={serverData?.minimum ?? 0}
+      max={serverData?.maximum ?? 100}
       step={serverData?.step || 1}
       value={value}
-      stepPixelSize={10}
     />
   );
 }

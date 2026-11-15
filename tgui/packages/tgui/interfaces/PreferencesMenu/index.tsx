@@ -19,8 +19,14 @@ import { RandomToggleState } from './useRandomToggleState';
 import { ServerPrefs } from './useServerPrefs';
 
 export function PreferencesMenu(props) {
+  const { data } = useBackend<PreferencesMenuData>();
+  const character = data.window === PrefsWindow.Character;
   return (
-    <Window width={920} height={770}>
+    <Window
+      width={character ? 1120 : 920}
+      height={character ? 820 : 770}
+      title={character ? 'Character Setup' : undefined}
+    >
       <Window.Content>
         <Suspense fallback={<LoadingScreen />}>
           <PrefsWindowInner />

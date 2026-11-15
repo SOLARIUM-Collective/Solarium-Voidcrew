@@ -238,3 +238,202 @@ $department_map: (
     }
   }
 }
+
+.CharacterSetup {
+  color: #dce5ee;
+  padding: 6px;
+  background: #151c24;
+
+  &__eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    color: #8ea5ba;
+    margin-bottom: 8px;
+  }
+  &__profiles {
+    padding: 8px 10px;
+  }
+  &__hint {
+    color: #8ea5ba;
+    padding-left: 10px;
+    font-size: 11px;
+  }
+  &__tabs .Button {
+    padding: 9px;
+    font-weight: bold;
+  }
+  &__page {
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+  }
+  &__main {
+    display: flex;
+    height: 100%;
+    min-height: 360px;
+    gap: 14px;
+  }
+  &__portrait {
+    flex: 0 0 250px;
+    min-height: 0;
+    padding: 12px;
+    background: #10161c;
+    border: 1px solid #304254;
+    border-radius: 5px;
+  }
+  &__editor {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+    padding-right: 4px;
+  }
+  &__settings {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 12px;
+  }
+  &__feature {
+    width: 70px;
+    text-align: center;
+  }
+  &__featureLabel {
+    font-size: 10px;
+    color: #9fb3c6;
+    margin: 5px 0;
+  }
+  &__preferences {
+    min-width: 0;
+    overflow: auto;
+    .LabeledList {
+      width: 100%;
+      table-layout: fixed;
+      margin: 0;
+    }
+    .LabeledList__cell:first-child {
+      width: 42%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .Stack__item,
+    .Dropdown,
+    .Dropdown__control {
+      min-width: 0;
+    }
+    .Input {
+      max-width: 100%;
+    }
+    .LabeledList__cell {
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+  }
+  .Section {
+    background: #1b2530;
+    border: 1px solid #304254;
+    border-radius: 5px;
+  }
+  .Section__title {
+    padding: 10px;
+    border-bottom: 1px solid #304254;
+  }
+  .Section__titleText {
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+  &__loadoutItem {
+    width: 112px;
+    padding: 4px;
+    background: #141c25;
+    border-radius: 4px;
+  }
+  &__itemName {
+    text-align: center;
+    min-height: 30px;
+    font-size: 11px;
+    padding: 4px;
+  }
+  &__roles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  &__role {
+    background: #141c25;
+    border: 1px solid #304254;
+    border-radius: 4px;
+    padding: 18px;
+  }
+  &__quirks {
+    .PreferencesMenu__Quirks__QuirkList {
+      background: #141c25;
+      border: 1px solid #304254;
+      border-radius: 4px;
+    }
+    .PreferencesMenu__Quirks__QuirkList__quirk {
+      background: #1b2530;
+      color: #dce5ee;
+      border-bottom: 1px solid #304254;
+      margin-bottom: 6px;
+      padding: 8px;
+      &:hover {
+        background: #273849;
+      }
+      &--positive {
+        background: #244739;
+        color: #b7edcf;
+      }
+      &--negative {
+        background: #492c32;
+        color: #f2c2c9;
+      }
+      &--neutral {
+        background: #2b3949;
+        color: #dce5ee;
+      }
+    }
+  }
+}
+
+.PreferenceSlider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  input[type='range'] {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    accent-color: #68b5d6;
+    cursor: pointer;
+  }
+  input[type='number'] {
+    width: 65px;
+    flex: 0 0 65px;
+    color: #e2edf6;
+    background: #10161c;
+    border: 1px solid #476079;
+    border-radius: 3px;
+    padding: 4px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .CharacterSetup__settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .CharacterSetup__portrait {
+    flex-basis: 220px;
+  }
+}
+@media (max-width: 720px) {
+  .CharacterSetup__roles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .CharacterSetup__portrait {
+    flex-basis: 190px;
+    padding: 6px;
+  }
+  .CharacterSetup__tabs .Button {
+    padding: 5px;
+  }
+}

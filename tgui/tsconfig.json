@@ -12,7 +12,14 @@
 		"moduleResolution": "Bundler",
 		"noEmit": true,
 		"paths": {
-			"solarium_tgui": ["./packages/solarium_tgui_fallback"]
+			"solarium_tgui": [
+				"./packages/solarium_tgui_fallback",
+				"../Horusheresy/tgui/packages/solarium_tgui"
+			],
+			"solarium_tgui/*": [
+				"./packages/solarium_tgui_fallback/*",
+				"../Horusheresy/tgui/packages/solarium_tgui/*"
+			]
 		},
 		"resolveJsonModule": true,
 		"skipLibCheck": true,

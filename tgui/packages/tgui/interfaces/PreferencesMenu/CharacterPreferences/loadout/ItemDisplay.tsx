@@ -1,5 +1,6 @@
 import { useBackend } from 'tgui/backend';
 import {
+  Box,
   DmIcon,
   Icon,
   ImageButton,
@@ -59,7 +60,10 @@ export function ItemDisplay(props: DisplayProps) {
   const { active, item, scale = 3 } = props;
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div
+      className="CharacterSetup__loadoutItem"
+      style={{ position: 'relative' }}
+    >
       <ImageButton
         imageSize={scale * 32}
         color={active ? 'green' : 'default'}
@@ -78,6 +82,7 @@ export function ItemDisplay(props: DisplayProps) {
           })
         }
       />
+      <Box className="CharacterSetup__itemName">{item.name}</Box>
       <div
         style={{ position: 'absolute', top: '8px', right: '8px', zIndex: '2' }}
       >

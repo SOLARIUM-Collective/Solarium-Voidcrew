@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { type SetStateAction, useState } from 'react';
+import { HIDE_NATIVE_PREVIEWS } from 'solarium_tgui/components/WindowGeometry';
 import { useBackend } from 'tgui/backend';
-import { Button, Stack } from 'tgui-core/components';
+import { Box, Button, Stack } from 'tgui-core/components';
 import { exhaustiveCheck } from 'tgui-core/exhaustive';
 
 import { PageButton } from '../components/PageButton';
@@ -29,14 +30,15 @@ function CharacterProfiles(props: ProfileProps) {
   const { activeSlot, onClick, profiles } = props;
 
   return (
-    <Stack justify="center" wrap>
+    <Stack wrap>
       {profiles.map((profile, slot) => (
-        <Stack.Item key={slot} mb={1}>
+        <Stack.Item key={slot}>
           <Button
             selected={slot === activeSlot}
             onClick={() => {
               onClick(slot);
             }}
+            icon={profile ? 'user' : 'plus'}
             fluid
           >
             {profile ?? 'New Character'}
@@ -52,6 +54,14 @@ export function CharacterPreferenceWindow(props) {
 
   const [currentPage, setCurrentPage] = useState(Page.Main);
 
+  const changePage = (next: SetStateAction<Page>) => {
+    const page = typeof next === 'function' ? next(currentPage) : next;
+    if (page === currentPage) return;
+    window.dispatchEvent(new Event(HIDE_NATIVE_PREVIEWS));
+    Byond.winset(data.character_preview_view, { 'is-visible': false });
+    setCurrentPage(page);
+  };
+
   let pageContents;
 
   switch (currentPage) {
@@ -59,15 +69,11 @@ export function CharacterPreferenceWindow(props) {
       pageContents = <ShipCategoriesPage />;
       break;
     case Page.Main:
-      pageContents = (
-        <MainPage openSpecies={() => setCurrentPage(Page.Species)} />
-      );
+      pageContents = <MainPage openSpecies={() => changePage(Page.Species)} />;
 
       break;
     case Page.Species:
-      pageContents = (
-        <SpeciesPage closeSpecies={() => setCurrentPage(Page.Main)} />
-      );
+      pageContents = <SpeciesPage closeSpecies={() => changePage(Page.Main)} />;
 
       break;
     case Page.Quirks:
@@ -83,8 +89,9 @@ export function CharacterPreferenceWindow(props) {
   }
 
   return (
-    <Stack vertical fill>
-      <Stack.Item>
+    <Stack vertical fill className="CharacterSetup">
+      <Stack.Item className="CharacterSetup__profiles">
+        <Box className="CharacterSetup__eyebrow">CHARACTER PROFILES</Box>
         <CharacterProfiles
           activeSlot={data.active_slot - 1}
           onClick={(slot) => {
@@ -96,18 +103,18 @@ export function CharacterPreferenceWindow(props) {
         />
       </Stack.Item>
       {!data.content_unlocked && (
-        <Stack.Item align="center">
-          Buy BYOND premium for more slots!
+        <Stack.Item className="CharacterSetup__hint">
+          BYOND membership unlocks additional character slots.
         </Stack.Item>
       )}
       <Stack.Divider />
       <Stack.Item>
-        <Stack fill>
+        <Stack fill className="CharacterSetup__tabs">
           <Stack.Item grow>
             <PageButton
               currentPage={currentPage}
               page={Page.Main}
-              setPage={setCurrentPage}
+              setPage={changePage}
               otherActivePages={[Page.Species]}
             >
               Character
@@ -118,7 +125,7 @@ export function CharacterPreferenceWindow(props) {
             <PageButton
               currentPage={currentPage}
               page={Page.Loadout}
-              setPage={setCurrentPage}
+              setPage={changePage}
             >
               Loadout
             </PageButton>
@@ -128,7 +135,7 @@ export function CharacterPreferenceWindow(props) {
             <PageButton
               currentPage={currentPage}
               page={Page.ShipCategories}
-              setPage={setCurrentPage}
+              setPage={changePage}
             >
               Ship Roles
             </PageButton>
@@ -138,7 +145,7 @@ export function CharacterPreferenceWindow(props) {
             <PageButton
               currentPage={currentPage}
               page={Page.Quirks}
-              setPage={setCurrentPage}
+              setPage={changePage}
             >
               Quirks
             </PageButton>
@@ -146,7 +153,12 @@ export function CharacterPreferenceWindow(props) {
         </Stack>
       </Stack.Item>
       <Stack.Divider />
-      <Stack.Item grow position="relative" overflowX="hidden" overflowY="auto">
+      <Stack.Item
+        grow
+        basis={0}
+        className="CharacterSetup__page"
+        position="relative"
+      >
         {pageContents}
       </Stack.Item>
     </Stack>

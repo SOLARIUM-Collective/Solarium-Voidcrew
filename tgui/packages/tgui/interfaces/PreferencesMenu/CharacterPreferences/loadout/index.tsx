@@ -28,9 +28,10 @@ export function LoadoutPage(props) {
   const loadout_tabs = serverData?.loadout.loadout_tabs || [];
 
   const [searchLoadout, setSearchLoadout] = useState('');
-  const [selectedTabName, setSelectedTab] = useState(
-    loadout_tabs?.[0].name || '',
-  );
+  const [selectedTabName, setSelectedTab] = useState('');
+  const currentTab = loadout_tabs.some((tab) => tab.name === selectedTabName)
+    ? selectedTabName
+    : loadout_tabs[0]?.name || '';
   const [modifyItemDimmer, setModifyItemDimmer] = useState<LoadoutItem | null>(
     null,
   );
@@ -50,10 +51,10 @@ export function LoadoutPage(props) {
         )}
         <Section
           fitted
-          title="&nbsp;"
+          title="Equipment catalog"
           buttons={
             <Input
-              width="200px"
+              width="260px"
               onChange={setSearchLoadout}
               placeholder="Search for an item..."
               value={searchLoadout}
@@ -65,7 +66,7 @@ export function LoadoutPage(props) {
               <Tabs.Tab
                 key={curTab.name}
                 selected={
-                  searchLoadout.length <= 1 && curTab.name === selectedTabName
+                  searchLoadout.length <= 1 && curTab.name === currentTab
                 }
                 onClick={() => {
                   setSelectedTab(curTab.name);
@@ -83,10 +84,10 @@ export function LoadoutPage(props) {
           </Tabs>
         </Section>
       </Stack.Item>
-      <Stack.Item grow>
+      <Stack.Item grow minHeight={0} minWidth={0}>
         <LoadoutTabs
           loadout_tabs={loadout_tabs}
-          currentTab={selectedTabName}
+          currentTab={currentTab}
           currentSearch={searchLoadout}
           modifyItemDimmer={modifyItemDimmer}
           setModifyItemDimmer={setModifyItemDimmer}
@@ -119,12 +120,12 @@ function LoadoutTabs(props: LoadoutTabsProps) {
 
   return (
     <Stack fill>
-      <Stack.Item align="center" width="250px" height="100%">
+      <Stack.Item align="center" width="270px" height="100%">
         <Stack vertical fill>
-          <Stack.Item height="60%">
-            <LoadoutPreviewSection />
+          <Stack.Item height="55%">
+            <LoadoutPreviewSection hidden={!!modifyItemDimmer} />
           </Stack.Item>
-          <Stack.Item grow>
+          <Stack.Item grow minHeight={0} minWidth={0}>
             <LoadoutSelectedSection
               all_tabs={loadout_tabs}
               modifyItemDimmer={modifyItemDimmer}
@@ -133,7 +134,7 @@ function LoadoutTabs(props: LoadoutTabsProps) {
           </Stack.Item>
         </Stack>
       </Stack.Item>
-      <Stack.Item grow>
+      <Stack.Item grow minHeight={0} minWidth={0}>
         {searching || activeCategory?.contents ? (
           <Section
             title={searching ? 'Search results' : 'Catalog'}
@@ -264,6 +265,11 @@ function LoadoutSelectedSection(props: LoadoutSelectedSectionProps) {
         </Button.Confirm>
       }
     >
+      {(!loadout_list || Object.keys(loadout_list).length === 0) && (
+        <Box color="label" p={1}>
+          Select items from the catalog to add them to your loadout.
+        </Box>
+      )}
       {loadout_list &&
         Object.entries(loadout_list).map(([path, item]) => (
           <Fragment key={path}>
@@ -280,7 +286,7 @@ function LoadoutSelectedSection(props: LoadoutSelectedSectionProps) {
   );
 }
 
-function LoadoutPreviewSection() {
+function LoadoutPreviewSection(props: { hidden: boolean }) {
   const { act, data } = useBackend<LoadoutManagerData>();
 
   return (
@@ -299,7 +305,11 @@ function LoadoutPreviewSection() {
     >
       <Stack vertical fill>
         <Stack.Item grow align="center">
-          <CharacterPreview height="100%" id={data.character_preview_view} />
+          <CharacterPreview
+            height="100%"
+            id={data.character_preview_view}
+            visible={!props.hidden}
+          />
         </Stack.Item>
         <Stack.Divider />
         <Stack.Item align="center">

@@ -120,7 +120,7 @@ function QuirkDisplay(props: QuirkDisplayProps) {
             textAlign: 'center',
           }}
         >
-          <Icon color="#333" fontSize={3} name={icon} />
+          <Icon color="label" fontSize={3} name={icon} />
         </Stack.Item>
 
         <Stack.Item
@@ -248,6 +248,7 @@ function QuirkPopper(props: QuirkPopperProps) {
                     ),
                     serverData,
                     randomBodyEnabled,
+                    data.character_preferences.randomization,
                   )}
                   maxHeight="100px"
                 />
@@ -278,9 +279,9 @@ function StatDisplay(props) {
 
   return (
     <Box
-      backgroundColor="#eee"
+      backgroundColor="#263a4b"
       bold
-      color="black"
+      color="#dce5ee"
       fontSize="1.2em"
       px={3}
       py={0.5}
@@ -386,8 +387,8 @@ export function QuirksPage(props) {
   }
 
   return (
-    <Stack fill>
-      <Stack.Item basis="50%">
+    <Stack fill className="CharacterSetup__quirks">
+      <Stack.Item basis="50%" minWidth={0}>
         <Stack vertical fill align="center">
           <Stack.Item>
             {maxPositiveQuirks > 0 ? (
@@ -459,7 +460,7 @@ export function QuirksPage(props) {
         <Icon name="exchange-alt" size={1.5} ml={2} mr={2} />
       </Stack.Item>
 
-      <Stack.Item basis="50%">
+      <Stack.Item basis="50%" minWidth={0}>
         <Stack vertical fill align="center">
           <Stack.Item>
             {pointsEnabled ? (
